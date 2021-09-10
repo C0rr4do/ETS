@@ -3,7 +3,7 @@
     <color name="correct">@color/green_500_light</color>
     <color name="incorrect">@color/red_500_light</color>
     <color name="warning">@color/orange_500_light</color>
-    <color name="special">@color/pink_500_light</color>
+    <color name="special">@color/indigo_500_light</color>
 
     <color name="list_divider">@color/grey_500.5</color>
 </resources>
