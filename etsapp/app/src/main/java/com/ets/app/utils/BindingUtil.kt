@@ -46,17 +46,18 @@ fun TextView.setCorrect(value: Correctness) {
     when (value) {
         Correctness.CORRECT -> {
             setTextColor(ContextCompat.getColor(context, R.color.correct))
-            paintFlags = paintFlags
+            paintFlags = paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         }
         Correctness.INCORRECT -> {
             setTextColor(ContextCompat.getColor(context, R.color.incorrect))
             paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         }
         Correctness.NONE -> {
+            // Retrieve default textColor of theme
             val themeTextColor = TypedValue()
             context.theme.resolveAttribute(android.R.attr.textColor, themeTextColor, true)
             setTextColor(themeTextColor.data)
-            paintFlags = paintFlags
+            paintFlags = paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         }
     }
 }
