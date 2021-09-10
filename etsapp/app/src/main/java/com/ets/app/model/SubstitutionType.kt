@@ -4,5 +4,6 @@ enum class SubstitutionType(val description: String) {
     SUBSTITUTION("Vertretung"),
     DESPITE_ABSENCE("Trotz Absenz"),
     ROOM_CHANGE("Raumänderung"),
-    CANCELED("Frei")
+    CANCELED("Frei"),
+    CLASS_CHANGED("Unterricht geändert")
 }

@@ -7,7 +7,23 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.ets.app.ui.fragments.HomeFragment"
+        android:name="com.ets.app.ui.fragments.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_substitutionPlanFragment"
+            app:destination="@id/substitutionPlanFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.ets.app.ui.fragments.settings.SettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/substitutionPlanFragment"
+        android:name="com.ets.app.ui.fragments.substitutionplan.SubstitutionPlanFragment"
+        android:label="SubstitutionPlanFragment"
+        tools:layout="@layout/fragment_substitution_plan" />
 </navigation>

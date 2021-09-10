@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data />
+
+    <com.google.android.material.circularreveal.CircularRevealLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- This second LinearLayout is necessary to have a separator line without padding -->
+        <com.google.android.material.circularreveal.CircularRevealLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/default_padding">
+
+            <com.github.florent37.expansionpanel.ExpansionHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:expansion_layout="@id/expansionLayout"
+                app:expansion_toggleOnClick="true">
+
+                <!-- HEADER -->
+
+                <com.google.android.material.circularreveal.CircularRevealLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/textViewCourse"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:textSize="@dimen/default_text_size"
+                        tools:text="E1(m05)" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/textViewSubLessons"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:textSize="@dimen/default_text_size"
+                        tools:text="1 - 2" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/textViewSubSubject"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:textSize="@dimen/default_text_size"
+                        tools:text="Mathematik" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/textViewSubRoomID"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:textSize="@dimen/default_text_size"
+                        tools:text="M5" />
+                </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+
+            </com.github.florent37.expansionpanel.ExpansionHeader>
+
+            <com.github.florent37.expansionpanel.ExpansionLayout
+                android:id="@+id/expansionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:expansion_expanded="false">
+                <!-- TODO to remove above : app:expansion_expanded="false/true"-->
+
+                <!-- CONTENT -->
+
+                <com.google.android.material.circularreveal.CircularRevealLinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/default_padding">
+
+                    <com.google.android.material.circularreveal.CircularRevealLinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/imageViewChangesTo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.25"
+                            app:srcCompat="@drawable/ic_baseline_subdirectory_arrow_right_24" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/textViewLessons"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.25"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:textSize="@dimen/default_text_size"
+                            tools:layout_editor_absoluteX="8dp"
+                            tools:text="1 - 2" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/textViewSubject"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.25"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:textSize="@dimen/default_text_size"
+                            tools:layout_editor_absoluteX="8dp"
+                            tools:text="Mathematik" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/textViewRoomID"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.25"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:textSize="@dimen/default_text_size"
+                            tools:layout_editor_absoluteX="8dp"
+                            tools:text="M5" />
+                    </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/textViewType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/half_default_padding"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:textColor="@color/warning"
+                        android:textSize="@dimen/default_text_size"
+                        tools:text="Vertretung" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/textViewInfoText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/half_default_padding"
+                        android:gravity="center"
+                        tools:text="no info" />
+                </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+
+            </com.github.florent37.expansionpanel.ExpansionLayout>
+
+        </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+
+        <!-- Bottom Separator Line-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/list_divider"
+            tools:layout_editor_absoluteY="121dp" />
+    </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+</layout>

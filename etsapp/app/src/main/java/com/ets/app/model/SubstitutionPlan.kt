@@ -2,11 +2,11 @@ package com.ets.app.model
 
 import java.util.*
 
-class SubstitutionsPlan(
+class SubstitutionPlan(
     val downloadTime: Date,
     val uploadTime: Date,
     val date: Date,
     val infoText: String,
-    val blockedRooms: Array<String>,
-    val substitutions: Array<Substitution>
+    val blockedRooms: List<String>,
+    val substitutions: List<Substitution>
 )
