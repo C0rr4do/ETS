@@ -112,9 +112,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
+                            android:tint="?android:attr/textColor"
                             android:layout_weight="0.25"
-                            app:srcCompat="@drawable/ic_baseline_subdirectory_arrow_right_24" />
-
+                            app:srcCompat="@drawable/ic_baseline_compare_arrows_24" />
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/textViewLessons"
                             lessons="@{substitution.lessons}"

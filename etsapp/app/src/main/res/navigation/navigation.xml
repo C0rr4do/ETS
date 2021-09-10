@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.ets.app.ui.fragments.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
@@ -20,10 +20,10 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.ets.app.ui.fragments.settings.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="@string/settings" />
     <fragment
         android:id="@+id/substitutionPlanFragment"
         android:name="com.ets.app.ui.fragments.substitutionplan.SubstitutionPlanFragment"
-        android:label="SubstitutionPlanFragment"
+        android:label="@string/substitution_plan"
         tools:layout="@layout/fragment_substitution_plan" />
 </navigation>
