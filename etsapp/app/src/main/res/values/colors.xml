@@ -18,10 +18,13 @@
     <color name="green_500_dark">#FF087F23</color>
     <color name="orange_500">#FFFF9800</color>
     <color name="orange_500_light">#FFFFC947</color>
+    <color name="pink_500">#FFE91E63</color>
+    <color name="pink_500_light">#FFFF6090</color>
 
     <color name="correct">@color/green_500_dark</color>
     <color name="incorrect">@color/red_500_dark</color>
     <color name="warning">@color/orange_500</color>
+    <color name="special">@color/pink_500</color>
     <color name="text_default">@color/grey_900</color>
 
     <color name="list_divider">@color/grey_900.5</color>

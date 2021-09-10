@@ -34,76 +34,7 @@ class SubstitutionAdapter : ListAdapter<Substitution, ViewHolder>(SleepNightDiff
 class ViewHolder private constructor(private val binding: SubstitutionItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(item: Substitution) {
-        val courseString = item.courses.joinToString()
-        // Course
-        binding.textViewCourse.text = courseString
-
-        // SubLessons
-        binding.textViewSubLessons.text = item.lessonsString()
-
-        // Subject
-        binding.textViewSubject.text = item.subject.friendlyName
-
-        // Lessons
-        binding.textViewLessons.text = item.lessonsString()
-
-        // RoomID
-        binding.textViewRoomID.text = item.roomID
-
-        // SubSubject
-        binding.textViewSubSubject.text = item.subSubject.friendlyName
-        if (item.subSubject == item.subject) {
-            val value = TypedValue()
-            binding.root.context.theme.resolveAttribute(android.R.attr.textColor, value, true)
-            binding.textViewSubject.setTextColor(value.data)
-        } else {
-            binding.textViewSubject.setTextColor(
-                ContextCompat.getColor(
-                    binding.root.context,
-                    R.color.incorrect
-                )
-            )
-            binding.textViewSubSubject.setTextColor(
-                ContextCompat.getColor(
-                    binding.root.context,
-                    R.color.correct
-                )
-            )
-        }
-
-        // SubRoomID
-        binding.textViewSubRoomID.text = item.subRoomID
-        if (item.subRoomID == item.roomID) {
-            val value = TypedValue()
-            binding.root.context.theme.resolveAttribute(android.R.attr.textColor, value, true)
-            binding.textViewRoomID.setTextColor(value.data)
-            binding.textViewRoomID.paintFlags = binding.textViewRoomID.paintFlags
-        } else {
-            binding.textViewRoomID.setTextColor(
-                ContextCompat.getColor(
-                    binding.root.context,
-                    R.color.incorrect
-                )
-            )
-            binding.textViewRoomID.paintFlags = binding.textViewRoomID.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            binding.textViewSubRoomID.setTextColor(
-                ContextCompat.getColor(
-                    binding.root.context,
-                    R.color.correct
-                )
-            )
-        }
-
-        // Type
-        binding.textViewType.text = item.type.description
-
-        // InfoText
-        if (item.infoText.isEmpty()) {
-            binding.textViewInfoText.visibility = View.GONE
-        } else {
-            binding.textViewInfoText.visibility = View.VISIBLE
-            binding.textViewInfoText.text = item.infoText
-        }
+        binding.substitution = item
 
         binding.executePendingBindings()
     }

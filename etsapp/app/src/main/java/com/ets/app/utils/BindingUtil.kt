@@ -1,22 +1,23 @@
 package com.ets.app.utils
 
+import android.graphics.Paint
+import android.util.TypedValue
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import com.ets.app.R
 import com.ets.app.model.Course
 import com.ets.app.model.Subject
 import com.ets.app.model.SubstitutionType
 
-/*
-@BindingAdapter("course")
-fun TextView.setCourse(course: Course) {
-    text = course.friendlyName
+
+@BindingAdapter("courses")
+fun TextView.setCourses(courses: Array<Course>) {
+    text = courses.joinToString()
 }
-@BindingAdapter("subject")
-fun TextView.setSubject(subject: Subject) {
-    text = subject.friendlyName
-}
+
 @BindingAdapter("lessons")
-fun TextView.setCourse(lessons: List<Int>) {
+fun TextView.setLessons(lessons: Array<Int>) {
     text = when {
         lessons.isEmpty() -> {
             ""
@@ -29,8 +30,33 @@ fun TextView.setCourse(lessons: List<Int>) {
         }
     }
 }
+
+@BindingAdapter("subject")
+fun TextView.setSubject(subject: Subject) {
+    text = subject.friendlyName
+}
+
 @BindingAdapter("type")
 fun TextView.setType(type: SubstitutionType) {
     text = type.description
 }
-*/
+
+@BindingAdapter("correct")
+fun TextView.setCorrect(value: Correctness) {
+    when (value) {
+        Correctness.CORRECT -> {
+            setTextColor(ContextCompat.getColor(context, R.color.correct))
+            paintFlags = paintFlags
+        }
+        Correctness.INCORRECT -> {
+            setTextColor(ContextCompat.getColor(context, R.color.incorrect))
+            paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+        }
+        Correctness.NONE -> {
+            val themeTextColor = TypedValue()
+            context.theme.resolveAttribute(android.R.attr.textColor, themeTextColor, true)
+            setTextColor(themeTextColor.data)
+            paintFlags = paintFlags
+        }
+    }
+}

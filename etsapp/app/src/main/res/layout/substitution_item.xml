@@ -3,7 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data />
+    <data>
+
+        <import type="android.view.View" />
+        <import type="com.ets.app.utils.Correctness" />
+
+        <variable
+            name="substitution"
+            type="com.ets.app.model.Substitution" />
+    </data>
 
     <com.google.android.material.circularreveal.CircularRevealLinearLayout
         android:layout_width="match_parent"
@@ -31,6 +39,7 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/textViewCourse"
+                        courses="@{substitution.courses}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.25"
@@ -41,6 +50,7 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/textViewSubLessons"
+                        lessons="@{substitution.lessons}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -52,11 +62,13 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/textViewSubSubject"
+                        subject="@{substitution.subSubject}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0.25"
                         android:gravity="center"
+                        correct="@{substitution.subject == substitution.subSubject ? Correctness.NONE : Correctness.CORRECT}"
                         android:singleLine="true"
                         android:textSize="@dimen/default_text_size"
                         tools:text="Mathematik" />
@@ -67,8 +79,10 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0.25"
+                        correct="@{substitution.roomID == substitution.subRoomID ? Correctness.NONE : Correctness.CORRECT}"
                         android:gravity="center"
                         android:singleLine="true"
+                        android:text="@{substitution.subRoomID}"
                         android:textSize="@dimen/default_text_size"
                         tools:text="M5" />
                 </com.google.android.material.circularreveal.CircularRevealLinearLayout>
@@ -78,8 +92,7 @@
             <com.github.florent37.expansionpanel.ExpansionLayout
                 android:id="@+id/expansionLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:expansion_expanded="false">
+                android:layout_height="wrap_content">
                 <!-- TODO to remove above : app:expansion_expanded="false/true"-->
 
                 <!-- CONTENT -->
@@ -104,8 +117,10 @@
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/textViewLessons"
+                            lessons="@{substitution.lessons}"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
                             android:layout_weight="0.25"
                             android:gravity="center"
                             android:singleLine="true"
@@ -115,10 +130,13 @@
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/textViewSubject"
+                            subject="@{substitution.subject}"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
                             android:layout_weight="0.25"
                             android:gravity="center"
+                            correct="@{substitution.subject == substitution.subSubject ? Correctness.NONE : Correctness.INCORRECT}"
                             android:singleLine="true"
                             android:textSize="@dimen/default_text_size"
                             tools:layout_editor_absoluteX="8dp"
@@ -128,9 +146,12 @@
                             android:id="@+id/textViewRoomID"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
                             android:layout_weight="0.25"
                             android:gravity="center"
+                            correct="@{substitution.roomID == substitution.subRoomID ? Correctness.NONE : Correctness.INCORRECT}"
                             android:singleLine="true"
+                            android:text="@{substitution.roomID}"
                             android:textSize="@dimen/default_text_size"
                             tools:layout_editor_absoluteX="8dp"
                             tools:text="M5" />
@@ -140,9 +161,11 @@
                         android:id="@+id/textViewType"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginTop="@dimen/half_default_padding"
                         android:gravity="center"
                         android:singleLine="true"
+                        android:text="@{substitution.type.description}"
                         android:textColor="@color/warning"
                         android:textSize="@dimen/default_text_size"
                         tools:text="Vertretung" />
@@ -151,8 +174,12 @@
                         android:id="@+id/textViewInfoText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginTop="@dimen/half_default_padding"
                         android:gravity="center"
+                        android:textColor="@color/special"
+                        android:text="@{substitution.infoText}"
+                        android:visibility="@{substitution.infoText.isEmpty() ? View.GONE : View.VISIBLE}"
                         tools:text="no info" />
                 </com.google.android.material.circularreveal.CircularRevealLinearLayout>
 
