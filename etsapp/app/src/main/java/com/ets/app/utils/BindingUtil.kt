@@ -33,7 +33,7 @@ fun TextView.setLessons(lessons: Array<Int>) {
 
 @BindingAdapter("subject")
 fun TextView.setSubject(subject: Subject) {
-    text = subject.friendlyName
+    text = context.getString(subject.resourceID)
 }
 
 @BindingAdapter("type")

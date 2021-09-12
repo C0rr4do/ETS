@@ -6,6 +6,7 @@
     <data>
 
         <import type="android.view.View" />
+
         <import type="com.ets.app.utils.Correctness" />
 
         <variable
@@ -49,7 +50,7 @@
                         tools:text="E1(m05)" />
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/textViewSubLessons"
+                        android:id="@+id/textViewLessons"
                         lessons="@{substitution.lessons}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -58,32 +59,35 @@
                         android:gravity="center"
                         android:singleLine="true"
                         android:textSize="@dimen/default_text_size"
+                        tools:layout_editor_absoluteX="8dp"
                         tools:text="1 - 2" />
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/textViewSubSubject"
-                        subject="@{substitution.subSubject}"
+                        android:id="@+id/textViewSubject"
+                        correct="@{substitution.subject == substitution.subSubject ? Correctness.NONE : Correctness.INCORRECT}"
+                        subject="@{substitution.subject}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0.25"
                         android:gravity="center"
-                        correct="@{substitution.subject == substitution.subSubject ? Correctness.NONE : Correctness.CORRECT}"
                         android:singleLine="true"
                         android:textSize="@dimen/default_text_size"
+                        tools:layout_editor_absoluteX="8dp"
                         tools:text="Mathematik" />
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/textViewSubRoomID"
+                        android:id="@+id/textViewRoomID"
+                        correct="@{substitution.roomID == substitution.subRoomID ? Correctness.NONE : Correctness.INCORRECT}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0.25"
-                        correct="@{substitution.roomID == substitution.subRoomID ? Correctness.NONE : Correctness.CORRECT}"
                         android:gravity="center"
                         android:singleLine="true"
-                        android:text="@{substitution.subRoomID}"
+                        android:text="@{substitution.roomID}"
                         android:textSize="@dimen/default_text_size"
+                        tools:layout_editor_absoluteX="8dp"
                         tools:text="M5" />
                 </com.google.android.material.circularreveal.CircularRevealLinearLayout>
 
@@ -93,7 +97,6 @@
                 android:id="@+id/expansionLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <!-- TODO to remove above : app:expansion_expanded="false/true"-->
 
                 <!-- CONTENT -->
 
@@ -112,11 +115,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:tint="?android:attr/textColor"
                             android:layout_weight="0.25"
+                            android:tint="?android:attr/textColor"
                             app:srcCompat="@drawable/ic_baseline_compare_arrows_24" />
+
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/textViewLessons"
+                            android:id="@+id/textViewSubLessons"
                             lessons="@{substitution.lessons}"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -125,35 +129,32 @@
                             android:gravity="center"
                             android:singleLine="true"
                             android:textSize="@dimen/default_text_size"
-                            tools:layout_editor_absoluteX="8dp"
                             tools:text="1 - 2" />
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/textViewSubject"
-                            subject="@{substitution.subject}"
+                            android:id="@+id/textViewSubSubject"
+                            correct="@{substitution.subject == substitution.subSubject ? Correctness.NONE : Correctness.CORRECT}"
+                            subject="@{substitution.subSubject}"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="0.25"
                             android:gravity="center"
-                            correct="@{substitution.subject == substitution.subSubject ? Correctness.NONE : Correctness.INCORRECT}"
                             android:singleLine="true"
                             android:textSize="@dimen/default_text_size"
-                            tools:layout_editor_absoluteX="8dp"
                             tools:text="Mathematik" />
 
                         <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/textViewRoomID"
+                            android:id="@+id/textViewSubRoomID"
+                            correct="@{substitution.roomID == substitution.subRoomID ? Correctness.NONE : Correctness.CORRECT}"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="0.25"
                             android:gravity="center"
-                            correct="@{substitution.roomID == substitution.subRoomID ? Correctness.NONE : Correctness.INCORRECT}"
                             android:singleLine="true"
-                            android:text="@{substitution.roomID}"
+                            android:text="@{substitution.subRoomID}"
                             android:textSize="@dimen/default_text_size"
-                            tools:layout_editor_absoluteX="8dp"
                             tools:text="M5" />
                     </com.google.android.material.circularreveal.CircularRevealLinearLayout>
 
@@ -177,8 +178,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginTop="@dimen/half_default_padding"
                         android:gravity="center"
-                        android:textColor="@color/special"
                         android:text="@{substitution.infoText}"
+                        android:textColor="@color/special"
                         android:visibility="@{substitution.infoText.isEmpty() ? View.GONE : View.VISIBLE}"
                         tools:text="no info" />
                 </com.google.android.material.circularreveal.CircularRevealLinearLayout>
