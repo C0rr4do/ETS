@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.ets.app.R
+import com.ets.app.model.Correctness
 import com.ets.app.model.Course
 import com.ets.app.model.Subject
 import com.ets.app.model.SubstitutionType

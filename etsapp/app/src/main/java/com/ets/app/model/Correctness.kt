@@ -1,4 +1,4 @@
-package com.ets.app.utils
+package com.ets.app.model
 
 enum class Correctness {
     CORRECT,

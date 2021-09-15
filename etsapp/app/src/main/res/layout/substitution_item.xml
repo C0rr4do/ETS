@@ -5,9 +5,9 @@
 
     <data>
 
-        <import type="android.view.View" />
+        <import type="com.ets.app.model.Correctness" />
 
-        <import type="com.ets.app.utils.Correctness" />
+        <import type="android.view.View" />
 
         <variable
             name="substitution"
@@ -19,21 +19,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- This second LinearLayout is necessary to have a separator line without padding -->
-        <com.google.android.material.circularreveal.CircularRevealLinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/default_padding">
+            android:orientation="vertical">
 
             <com.github.florent37.expansionpanel.ExpansionHeader
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/default_padding"
                 app:expansion_layout="@id/expansionLayout"
                 app:expansion_toggleOnClick="true">
 
                 <!-- HEADER -->
-
                 <com.google.android.material.circularreveal.CircularRevealLinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -89,22 +87,24 @@
                         android:textSize="@dimen/default_text_size"
                         tools:layout_editor_absoluteX="8dp"
                         tools:text="M5" />
+
                 </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+
 
             </com.github.florent37.expansionpanel.ExpansionHeader>
 
             <com.github.florent37.expansionpanel.ExpansionLayout
                 android:id="@+id/expansionLayout"
+                android:paddingHorizontal="@dimen/default_padding"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <!-- CONTENT -->
-
                 <com.google.android.material.circularreveal.CircularRevealLinearLayout
                     android:layout_width="match_parent"
+                    android:paddingBottom="@dimen/default_padding"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="@dimen/default_padding">
+                    android:orientation="vertical">
 
                     <com.google.android.material.circularreveal.CircularRevealLinearLayout
                         android:layout_width="match_parent"
@@ -182,11 +182,11 @@
                         android:textColor="@color/special"
                         android:visibility="@{substitution.infoText.isEmpty() ? View.GONE : View.VISIBLE}"
                         tools:text="no info" />
+
                 </com.google.android.material.circularreveal.CircularRevealLinearLayout>
 
             </com.github.florent37.expansionpanel.ExpansionLayout>
-
-        </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+        </LinearLayout>
 
         <!-- Bottom Separator Line-->
         <View
