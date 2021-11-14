@@ -19,16 +19,4 @@ class SubstitutionPlanViewModel : ViewModel() {
     private val _substitutionPlan = MutableLiveData<SubstitutionPlan>()
     val substitutionPlan: LiveData<SubstitutionPlan>
         get() = _substitutionPlan
-
-    fun loadSubstitutions(activity: MainActivity) {
-        viewModelScope.async {
-            var downloader = activity.downloader
-
-            downloader.download{
-                var sp = SubstitutionPlanParser.parseSubstitutionPlan(it)
-                _substitutionPlan.value = sp
-            }
-
-        }
-    }
 }

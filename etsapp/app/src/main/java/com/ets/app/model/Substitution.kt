@@ -8,6 +8,6 @@ class Substitution(
     val roomID: String,
     val subSubject: Subject,
     val subRoomID: String,
-    val type: SubstitutionType,
+    val type: String,
     val infoText: String
 )

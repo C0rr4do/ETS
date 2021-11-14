@@ -19,10 +19,11 @@
         <entry key="..\:/dev/Android/Kotlin/ETS/etsapp/app/src/main/res/menu/navdrawer_menu.xml" value="0.1" />
         <entry key="..\:/dev/Android/Kotlin/ETS/etsapp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.22135416666666666" />
         <entry key="..\:/dev/Android/Kotlin/ETS/etsapp/app/src/main/res/xml/root_preferences.xml" value="0.31929347826086957" />
+        <entry key="app/src/main/res/layout/substitution_item.xml" value="0.19739583333333333" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

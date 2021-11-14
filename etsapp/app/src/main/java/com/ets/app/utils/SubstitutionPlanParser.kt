@@ -1,5 +1,6 @@
 package com.ets.app.utils
 
+import android.util.Log
 import com.ets.app.model.*
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.text.PDFTextStripper
@@ -16,18 +17,28 @@ class SubstitutionPlanParser {
             stripper.startPage = 1
             stripper.endPage = doc.numberOfPages
 
-            val text = stripper.getText(doc)
+            val text: String = stripper.getText(doc)
             doc.close()
 
             val lines = text.split("\n")
+            var substitutions : MutableList<Substitution> = mutableListOf<Substitution>()
 
             var index = 0
-            while (!lines[index].startsWith("Klasse")) {
-                index++
-            }
 
-            index++
-            var substitutions = lines.map { str -> parseSubstitutionLine(str) }
+            while(index < lines.size) {
+                while (index < lines.size && !lines[index].startsWith("Klasse")) {
+                    index++
+                }
+
+                index++
+                while(index< lines.size && !lines[index].startsWith("Edertalschule")) {
+                    var line = lines[index]
+                    if (line.length > 0) {
+                        substitutions.add(parseSubstitutionLine(line))
+                    }
+                    index++
+                }
+            }
 
             return SubstitutionPlan(Date(), Date(), Date(), "", listOf(""), substitutions)
         }
@@ -38,13 +49,16 @@ class SubstitutionPlanParser {
 
             // course
             var course: Course
+
+            var oberstufe = false
             if (!(line[0] == 'E' || line[0] == 'Q')) {
-                val friendlyName = parts[0].removeRange(2, 2).trimStart('0')
+                val friendlyName = parts[0].removeRange(2, 3).trimStart('0')
                 course = Course(parts[0], null, friendlyName)
                 index = 1
             } else {
-                course = Course(parts[0], parts[1], "${parts[0]}(${parts[1]}")
+                course = Course(parts[0], parts[1], "${parts[0]}(${parts[1]})")
                 index = 2
+                oberstufe = true
             }
 
             // lessons
@@ -65,13 +79,20 @@ class SubstitutionPlanParser {
             var roomId = parts[index]
             index++
 
-            var subSubject = Subject.CANCELED
-            if (Subject.values().any { it.id == parts[index] }) {
-                subSubject = getSubject(parts[index])
-                index++
-            } else if (parts[index] == "---") {
-                index++
+            var subSubject: Subject
+            if (oberstufe) {
+                subSubject = Subject.CANCELED
             }
+            else {
+                subSubject = subject
+            }
+
+             if (Subject.values().any { it.id == parts[index] }) {
+                    subSubject = getSubject(parts[index])
+                    index++
+                } else if (parts[index] == "---") {
+                    index++
+                }
 
             var subRoomId = parts[index]
             index++
@@ -85,11 +106,13 @@ class SubstitutionPlanParser {
                 index++
             }
 
-            val substitutionType = getSubstitutionType(typeDesc)
+//            val substitutionType = getSubstitutionType(typeDesc)
+        val substitutionType = typeDesc
 
             var infoText = ""
-            while (index < parts.size) {
-                infoText += parts[index++]
+            if (index < parts.size) {
+                val textParts = parts.subList(index, parts.size)
+                infoText = textParts.joinToString(" ")
             }
 
             return Substitution(

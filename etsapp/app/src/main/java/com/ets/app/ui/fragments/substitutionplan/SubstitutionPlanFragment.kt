@@ -13,9 +13,9 @@ import com.ets.app.databinding.FragmentSubstitutionPlanBinding
 import com.ets.app.model.*
 import com.ets.app.ui.activities.MainActivity
 import com.ets.app.utils.Downloader
+import com.ets.app.utils.SubstitutionPlanParser
 import com.ets.app.utils.Util
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class SubstitutionPlanFragment : Fragment() {
 
@@ -53,13 +53,14 @@ class SubstitutionPlanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val sp = SubstitutionPlan(downloadTime, uploadTime, date, infoText, blockedRooms,substitutions)
-//        viewModel.setSubstitutionPlan(sp)
-//        adapter.submitList(sp.substitutions)
-
-        viewModel.loadSubstitutions(activity as MainActivity)
-
-//        viewModel.setSubstitutionPlan(sp)
-//        adapter.submitList(sp.substitutions)
+        runBlocking {
+            launch {
+                downloader.download {
+                    val sp = SubstitutionPlanParser.parseSubstitutionPlan(it)
+                    viewModel.setSubstitutionPlan(sp)
+                    adapter.submitList(sp.substitutions)
+                }
+            }
+        }
     }
 }
