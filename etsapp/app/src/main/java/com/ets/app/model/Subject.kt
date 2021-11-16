@@ -21,7 +21,7 @@ enum class Subject(val id: String, val resourceID: Int) {
     POLITICS_ECONOMICS("POWI", R.string.politics_economics),
     HISTORY("G", R.string.history),
     RELIGION_EV("REV", R.string.religion_ev),
-    RELIGION_K("RK", R.string.religion_cath), // TODO Revise RELIGION_K.id
+    RELIGION_K("RKA", R.string.religion_cath), // TODO Revise RELIGION_K.id
     ETHICS("ETHI", R.string.ethics),
     GEOGRAPHY("EK", R.string.geography),
     SPORTS("SPO", R.string.sports) // TODO Revise SPORTS.id
