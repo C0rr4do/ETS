@@ -41,7 +41,10 @@ class ParsingService @Inject constructor(
     private val subjectRegex = Regex("""[A-Z\u00C4\u00D6\u00DC]+\s""")
     private val typeRegex =
         Regex("""Raumänderung|Vertretung|frei|Trotz Absenz|Fachbetreuung|Sondereins\.|Verlegung|Unterricht geändert""")
+<<<<<<< HEAD
     private val dateRegex = Regex("""Vertretungen\s+(\d{2})\.(\d{2})\..+""")
+=======
+>>>>>>> 759711b (Rework Substitution Parser)
 
     @Volatile
     private var parsingJobCount = 0
@@ -92,8 +95,26 @@ class ParsingService @Inject constructor(
                 // Get file that corresponds to 'planName'
                 val file = fileService.getFileByName(planName)
 
+<<<<<<< HEAD
                 // Parse substitution-plan of file
                 var parsedPlan = parsePlan(planName, file)
+=======
+                var parsedPlan: SubstitutionPlan? = null
+                try {
+                    // Parse substitution-plan of file
+                    parsedPlan = parsePlan(planName, file)
+                } catch (e: Exception) {
+                    with(Handler(Looper.getMainLooper())) {
+                        post {
+                            Toast.makeText(
+                                context,
+                                "Error while parsing substitution-plan",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+>>>>>>> 759711b (Rework Substitution Parser)
 
                 // If substitution-plan was parsed successfully, store result in cache
                 parsedPlan?.let {
@@ -174,6 +195,7 @@ class ParsingService @Inject constructor(
 
             while (index < lines.size) {
                 val courses = parseCourse(lines, index)
+<<<<<<< HEAD
                 var line = lines[index]
                 try {
                     if (courses.result != null) {
@@ -220,6 +242,24 @@ class ParsingService @Inject constructor(
                             ).show()
                         }
                     }
+=======
+
+                if (courses.result != null) {
+                    var line = lines[index]
+                    val lessons = parseLessons(line)
+                    val subject = parseSubject(line, lessons.endIndex)
+                    val room = parseRoom(line, subject.endIndex)
+                    val subSubject = parseSubject(line, room.endIndex)
+                    val subRoom = parseRoom(line, subSubject.endIndex)
+                    val type = parseType(line, subRoom.endIndex)
+                    val info = line.substring(type.endIndex).trim()
+
+                    // println("${course.result}\t${lessons.result}\t${subject.result}\t${room.result}\t${subSubject.result}\t${subRoom.result}\t${type.result}\t${info}")
+                    substitutions.add(Substitution(id++, courses.result, lessons.result, subject.result, room.result, subSubject.result, subRoom.result, type.result, info))
+                    index += courses.lines + 1
+                } else {
+                    index++
+>>>>>>> 759711b (Rework Substitution Parser)
                 }
                 index++
             }
@@ -286,12 +326,20 @@ class ParsingService @Inject constructor(
 
             val parts = str.split("-")
             val start = parts[0].toInt()
+<<<<<<< HEAD
 
             return if (parts.size == 2) {
                 val end = parts[1].toInt()
                 LessonParserData(IntRange(start, end), endIndex)
             } else {
                 LessonParserData(IntRange(start, start), endIndex)
+=======
+            if (parts.size == 2) {
+                val end = parts[1].toInt()
+                return LessonParserData(IntRange(start, end), endIndex)
+            } else {
+                return LessonParserData(IntRange(start, start), endIndex)
+>>>>>>> 759711b (Rework Substitution Parser)
             }
         }
 
@@ -301,10 +349,14 @@ class ParsingService @Inject constructor(
     private fun parseSubject(line: String, index: Int): SubjectParserData {
         val match = subjectRegex.find(line, index)
 
+<<<<<<< HEAD
         return if (match != null) SubjectParserData(
             getSubject(match.value.trim()),
             match.range.last + 1
         )
+=======
+        return if (match != null) SubjectParserData(getSubject(match.value.trim()), match.range.last + 1)
+>>>>>>> 759711b (Rework Substitution Parser)
         else SubjectParserData(Subject.UNKNOWN, index)
     }
 
@@ -338,9 +390,17 @@ class ParsingService @Inject constructor(
 
     data class CourseParserData(val result: List<Course>?, val lines: Int)
 
+<<<<<<< HEAD
     data class LessonParserData(var result: IntRange, val endIndex: Int)
 
     data class SubjectParserData(var result: Subject, val endIndex: Int)
 
     data class ParserData(var result: String, val endIndex: Int)
+=======
+    data class LessonParserData(val result: IntRange, val endIndex: Int)
+
+    data class SubjectParserData(val result: Subject, val endIndex: Int)
+
+    data class ParserData(val result: String, val endIndex: Int)
+>>>>>>> 759711b (Rework Substitution Parser)
 }
