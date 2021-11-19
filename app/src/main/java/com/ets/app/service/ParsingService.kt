@@ -31,7 +31,16 @@ class ParsingService @Inject constructor(
     private val _runningJobIds = MutableLiveData(mutableListOf<Int>())
     val parsing = Transformations.map(_runningJobIds) { it.size > 0 }
 
-    @Volatile private var parsingJobCount = 0
+    // regular expressions
+    private val courseRegex = Regex("""\d{3}[a-z](\,)?|[QE]\d\/\d\s+\w+\d+""")
+    private val lessonRegex = Regex("""\s\d\s(\-\s\d)?""")
+    private val roomRegex = Regex("""[A-Z0-9]+\s""")
+    private val subjectRegex = Regex("""[A-Z\u00C4\u00D6\u00DC]+\s""")
+    private val typeRegex =
+        Regex("""Raumänderung|Vertretung|frei|Trotz Absenz|Fachbetreuung|Sondereins\.|Verlegung|Unterricht geändert""")
+
+    @Volatile
+    private var parsingJobCount = 0
 
     suspend fun getParsedDate(planName: String): Long? {
         // If date of this substitution-plan was parsed and cached already
@@ -84,7 +93,7 @@ class ParsingService @Inject constructor(
                     // Parse substitution-plan of file
                     parsedPlan = parsePlan(planName, file)
                 } catch (e: Exception) {
-                    with (Handler(Looper.getMainLooper())) {
+                    with(Handler(Looper.getMainLooper())) {
                         post {
                             Toast.makeText(
                                 context,
@@ -142,42 +151,26 @@ class ParsingService @Inject constructor(
             val substitutions = mutableListOf<Substitution>()
 
             var index = 0
+            var id = 0
 
             while (index < lines.size) {
-                while (index < lines.size && !lines[index].startsWith("Klasse")) {
-                    index++
-                }
+                val courses = parseCourse(lines, index)
 
-                index++
-                while (index < lines.size && !lines[index].startsWith("Edertalschule")) {
+                if (courses.result != null) {
                     var line = lines[index]
-                    if (lines.size > index + 1) {
-                        var nextLine = lines[index + 1]
-                        if (nextLine.length <= 5) {
-                            val startIndex = line.indexOf(',')
-                            val first = line.substring(0..startIndex)
-                            val last = line.substring(startIndex + 1)
+                    val lessons = parseLessons(line)
+                    val subject = parseSubject(line, lessons.endIndex)
+                    val room = parseRoom(line, subject.endIndex)
+                    val subSubject = parseSubject(line, room.endIndex)
+                    val subRoom = parseRoom(line, subSubject.endIndex)
+                    val type = parseType(line, subRoom.endIndex)
+                    val info = line.substring(type.endIndex).trim()
 
-                            line = first
-                            index++
-                            while (index < lines.size && nextLine.length <= 5) {
-                                line += nextLine
-                                index++
-
-                                if (index < lines.size) {
-                                    nextLine = lines[index]
-                                }
-                            }
-
-                            line += last
-                        } else {
-                            index++
-                        }
-                    }
-
-                    if (line.isNotEmpty()) {
-                        substitutions.add(parseSubstitutionLine(line))
-                    }
+                    // println("${course.result}\t${lessons.result}\t${subject.result}\t${room.result}\t${subSubject.result}\t${subRoom.result}\t${type.result}\t${info}")
+                    substitutions.add(Substitution(id++, courses.result, lessons.result, subject.result, room.result, subSubject.result, subRoom.result, type.result, info))
+                    index += courses.lines + 1
+                } else {
+                    index++
                 }
             }
 
@@ -185,105 +178,94 @@ class ParsingService @Inject constructor(
         }
     }
 
-    private fun parseSubstitutionLine(line: String): Substitution {
+    private fun parseCourse(lines: List<String>, index: Int): CourseParserData {
+        var courseString = ""
+        var curr = index;
 
-        // course
-        val courses: Array<Course>
-        val courseRegex = Regex("""((\d{3}\w,\s*)*(\d{3}\w))|[EQ]\d/\d\s+\w+\d+""")
-        val courseString = courseRegex.find(line)?.value
+        do {
+            var line = lines[curr]
+            var match = courseRegex.findAll(line)
 
-        if (courseString != null) {
-            val courseStringParts = courseString.split(',')
-            if (!(line[0] == 'E' || line[0] == 'Q')) {
-                courses = Array(courseStringParts.size) { i ->
+            var lastMatch = true;
+            match.forEach {
+                courseString += it.value
+
+                lastMatch = it.groupValues[1] == ""
+            }
+
+            if (!lastMatch) {
+                curr++
+            }
+        } while (!lastMatch && curr < lines.size)
+
+        if (courseString.isNotEmpty()) {
+            var courseStringParts = courseString.split(',').map { it.trim() }
+
+            var courses = courseStringParts.map {
+                if (it.startsWith("Q") || it.startsWith("E")) {
+                    val parts = it.split(' ')
+
                     Course(
-                        courseStringParts[i].trim(),
-                        null,
-                        courseStringParts[i].trim().removeRange(2, 3).trimStart('0')
+                        when (parts[0]) {
+                            "E1/2" -> 11;
+                            "Q1/2" -> 12;
+                            "Q3/4" -> 13;
+                            else -> -1
+                        }, parts[1]
                     )
-                }
-            } else {
-                courses = Array(courseStringParts.size) {
-                    Course("null", null, "null")
-                }
+                } else {
+                    val classId = it.substring(0..1).toInt()
+                    val courseId = it[3].toString()
 
-                courseStringParts.forEachIndexed { index, element ->
-                    val courseParts = element.split(' ')
-                    courses[index] = Course(
-                        courseParts[0].trim(),
-                        courseParts[1].trim(),
-                        "${courseParts[0].trim()}(${courseParts[1].trim()})"
-                    )
+                    Course(classId, courseId)
                 }
             }
-        } else {
-            courses = Array(0) { Course("null", null, "null") }
+            return CourseParserData(courses, curr - index)
         }
 
-        var index = 0
-        val parts = line.removeRange(0, courseString?.length ?: 0).trimStart().split(' ')
+        return CourseParserData(null, index)
+    }
 
-        // lessons
-        val lessons: Array<Int>
-        if (parts[index + 1] == "-") {
-            lessons = arrayOf(parts[index].toInt(), parts[index + 2].toInt())
-            index += 3
-        } else {
-            lessons = arrayOf(parts[index].toInt())
-            index++
+    private fun parseLessons(line: String): LessonParserData {
+        val match = lessonRegex.find(line)
+
+        if (match != null) {
+            val endIndex = match.range.last + 1
+
+            val str = match.groupValues[0].replace(" ", "")
+
+            val parts = str.split("-")
+            val start = parts[0].toInt()
+            if (parts.size == 2) {
+                val end = parts[1].toInt()
+                return LessonParserData(IntRange(start, end), endIndex)
+            } else {
+                return LessonParserData(IntRange(start, start), endIndex)
+            }
         }
 
-        // subject
-        val subject = getSubject(parts[index])
-        index++
+        return LessonParserData(IntRange(0, 0), 0)
+    }
 
-        // roomId
-        val roomId = parts[index]
-        index++
+    private fun parseSubject(line: String, index: Int): SubjectParserData {
+        val match = subjectRegex.find(line, index)
 
-        var subSubject = subject
-        if (Subject.values().any { it.id == parts[index] }) {
-            subSubject = getSubject(parts[index])
-            index++
-        } else if (parts[index] == "---") {
-            index++
-        }
+        return if (match != null) SubjectParserData(getSubject(match.value.trim()), match.range.last + 1)
+        else SubjectParserData(Subject.UNKNOWN, index)
+    }
 
-        val subRoomId = parts[index]
-        index++
+    private fun parseRoom(line: String, index: Int): ParserData {
+        val match = roomRegex.find(line, index)
 
-        val typeDesc: String
-        if (parts[index] == "Unterricht" || parts[index] == "Trotz") {
-            typeDesc = parts[index] + parts[index + 1]
-            index += 2
-        } else {
-            typeDesc = parts[index]
-            index++
-        }
+        return if (match != null) ParserData(match.value.trim(), match.range.last + 1)
+        else ParserData("", index)
+    }
 
-//            val substitutionType = getSubstitutionType(typeDesc)
+    private fun parseType(line: String, index: Int): ParserData {
+        val match = typeRegex.find(line, index)
 
-        when (typeDesc) {
-            "frei" -> subSubject = Subject.CANCELED
-        }
-
-        var infoText = ""
-        if (index < parts.size) {
-            val textParts = parts.subList(index, parts.size)
-            infoText = textParts.joinToString(" ")
-        }
-
-        return Substitution(
-            -1,
-            courses.toList(),
-            lessons.toList(),
-            subject,
-            roomId,
-            subSubject,
-            subRoomId,
-            typeDesc,
-            infoText
-        )
+        return if (match != null) ParserData(match.value.trim(), match.range.last + 1)
+        else ParserData("", index)
     }
 
     private fun getSubject(id: String): Subject {
@@ -299,4 +281,12 @@ class ParsingService @Inject constructor(
         // TODO Do not hardcode this
         return "pennenspatz"
     }
+
+    data class CourseParserData(val result: List<Course>?, val lines: Int)
+
+    data class LessonParserData(val result: IntRange, val endIndex: Int)
+
+    data class SubjectParserData(val result: Subject, val endIndex: Int)
+
+    data class ParserData(val result: String, val endIndex: Int)
 }

@@ -61,14 +61,14 @@ class SubstitutionItem(
         }
 
         private fun formatCourses(courses: List<Course>): String {
-            return courses.sortedBy { course -> course.friendlyName }.joinToString()
+            return courses.sortedBy { course -> course.toString() }.joinToString()
         }
 
-        private fun formatLessons(lessons: List<Int>): String {
-            return if (lessons.size > 1) {
-                "${lessons.first()} - ${lessons.last()}"
+        private fun formatLessons(lessons: IntRange): String {
+            return if (lessons.start == lessons.endInclusive) {
+                "${lessons.start}"
             } else {
-                "${lessons.firstOrNull()}"
+                "${lessons.start} - ${lessons.endInclusive}"
             }
         }
     }

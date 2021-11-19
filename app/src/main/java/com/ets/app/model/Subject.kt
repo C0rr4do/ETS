@@ -25,5 +25,6 @@ enum class Subject(val id: String, val resourceID: Int) {
     ETHICS("ETHI", R.string.subject_ethics),
     GEOGRAPHY("EK", R.string.subject_geography),
     SPORTS("SPO", R.string.subject_sports),
-    REMEDIATION("STFÖ", R.string.subject_remediation)
+    REMEDIATION("STFÖ", R.string.subject_remediation),
+    UNKNOWN("UNKNOWN", R.string.subject_unknown)
 }

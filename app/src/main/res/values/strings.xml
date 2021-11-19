@@ -39,6 +39,7 @@
     <string name="subject_geography">Geography</string>
     <string name="subject_sports">Sports</string>
     <string name="subject_remediation">Remediation</string>
+    <string name="subject_unknown">Unknown</string>
     <string name="current_plan">Current plan</string>
     <string name="switch_to_latest">Switch to latest</string>
     <string name="allow_roaming">Allow roaming</string>
