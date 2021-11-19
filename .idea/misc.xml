@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/item_plan_info.xml" value="0.1" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/item_substitution.xml" value="0.1" />
         <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.22135416666666666" />
         <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/drawable/avd_refresh.xml" value="0.22135416666666666" />
         <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/drawable/open_in_new.xml" value="0.3828125" />

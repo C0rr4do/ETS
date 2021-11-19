@@ -53,7 +53,7 @@ class ParsingService @Inject constructor(
                 val parsedDate = parseDate(file)
 
                 // If date was parsed successfully, store result in cache
-                parsedDate?.let { parsedDates[planName] = it }
+                parsedDates[planName] = parsedDate
 
                 // Indicate that this job is finished now
                 markAsFinished(jobId)
@@ -115,12 +115,12 @@ class ParsingService @Inject constructor(
         _runningJobIds.postValue(_runningJobIds.value!!.apply { remove(jobId) })
     }
 
-    private fun parseDate(file: File?): Long? {
+    private fun parseDate(file: File?): Long {
         // TODO Implement functionality
-        return if (file == null) {
-            null
+        if (file == null) {
+            return Timestamps.UNKNOWN_TIMESTAMP
         } else {
-            1000000000000
+            return Timestamps.UNKNOWN_TIMESTAMP
         }
     }
 
@@ -181,7 +181,7 @@ class ParsingService @Inject constructor(
                 }
             }
 
-            SubstitutionPlan(planName.toLong(), 0, "", arrayOf(), substitutions)
+            SubstitutionPlan(planName.toLong(), parseDate(file), "", arrayOf(), substitutions)
         }
     }
 

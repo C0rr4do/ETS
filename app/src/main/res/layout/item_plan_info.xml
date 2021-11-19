@@ -12,6 +12,7 @@
     </data>
 
     <com.github.c0rr4do.expansionlayout.ExpansionLayout
+        android:id="@+id/expansionLayoutPlanInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:toggleOnHeaderClick="true"

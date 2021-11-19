@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.ets.app.service.FileService
 import com.ets.app.service.ParsingService
 import com.ets.app.service.SyncService
-import com.ets.app.service.TimestampFormatter
+import com.ets.app.service.Timestamps
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -56,11 +56,11 @@ class PreviousPlansViewModel @Inject constructor(
             fileService.getFileByName(planName)?.absolutePath
 
         val planDate =
-            parsingService.getParsedDate(planName)?.let { TimestampFormatter.formatDate(it) }
+            parsingService.getParsedDate(planName)?.let { Timestamps.formatDate(it) }
 
-        val downloadDate = TimestampFormatter.formatDate(planName.toLong())
+        val downloadDate = Timestamps.formatDate(planName.toLong())
 
-        val downloadTime = TimestampFormatter.formatTime(planName.toLong())
+        val downloadTime = Timestamps.formatTime(planName.toLong())
 
         return PlanInfoItem(
             planName,

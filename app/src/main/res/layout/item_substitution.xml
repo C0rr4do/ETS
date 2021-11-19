@@ -15,7 +15,7 @@
     </data>
 
     <com.github.c0rr4do.expansionlayout.ExpansionLayout
-        android:id="@+id/expansionLayout"
+        android:id="@+id/expansionLayoutSubstitution"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:toggleOnHeaderClick="true"
@@ -25,7 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/default_padding">
+            android:paddingHorizontal="@dimen/half_default_padding"
+            android:paddingVertical="@dimen/default_padding">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewCourses"
@@ -35,7 +36,7 @@
                 android:layout_weight="0.25"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:paddingEnd="@dimen/half_default_padding"
+                android:paddingHorizontal="@dimen/half_default_padding"
                 android:singleLine="true"
                 android:text="@{substitutionItem.courses}"
                 android:textAlignment="center"
@@ -74,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="0.25"
-                android:paddingStart="@dimen/half_default_padding"
+                android:paddingHorizontal="@dimen/half_default_padding"
                 android:text="@{substitutionItem.room}"
                 android:textAlignment="center"
                 tools:text="207" />
@@ -99,7 +100,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.25"
                     android:gravity="center_horizontal"
-                    android:paddingEnd="@dimen/half_default_padding"
+                    android:paddingHorizontal="@dimen/half_default_padding"
                     android:src="@drawable/compare_arrows" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -135,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="0.25"
-                    android:paddingStart="@dimen/half_default_padding"
+                    android:paddingHorizontal="@dimen/half_default_padding"
                     android:text="@{substitutionItem.subRoom}"
                     android:textAlignment="center"
                     tools:text="207" />

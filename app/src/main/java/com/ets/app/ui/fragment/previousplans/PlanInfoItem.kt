@@ -10,6 +10,13 @@ class PlanInfoItem(
     val downloadTime: String
 ) : ViewModel() {
 
+    private var _expanded = false
+    var expanded: Boolean
+        get() = _expanded
+        set(value) {
+            _expanded = value
+        }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

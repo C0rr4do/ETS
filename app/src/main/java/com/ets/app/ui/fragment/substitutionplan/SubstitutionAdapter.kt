@@ -27,14 +27,14 @@ class SubstitutionViewHolder private constructor(private val binding: ItemSubsti
 
     fun bind(substitutionItem: SubstitutionItem) {
         binding.substitutionItem = substitutionItem
-        binding.expansionLayout.expansionListener = object: ExpansionLayout.ExpansionListener {
+        binding.expansionLayoutSubstitution.expansionListener = object: ExpansionLayout.ExpansionListener {
             override fun onExpansionToggle(expansionLayout: ExpansionLayout, expanded: Boolean) {
                 super.onExpansionToggle(expansionLayout, expanded)
                 binding.substitutionItem?.expanded = expanded
             }
         }
-        if (substitutionItem.expanded != binding.expansionLayout.expanded) {
-            binding.expansionLayout.toggle(false)
+        if (substitutionItem.expanded != binding.expansionLayoutSubstitution.expanded) {
+            binding.expansionLayoutSubstitution.toggle(false)
         }
         binding.executePendingBindings()
     }

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ets.app.BuildConfig
 import com.ets.app.R
 import com.ets.app.databinding.ItemPlanInfoBinding
+import com.github.c0rr4do.expansionlayout.ExpansionLayout
 import java.io.File
 
 
@@ -35,6 +36,15 @@ class PlanInfoViewHolder private constructor(private val binding: ItemPlanInfoBi
 
     fun bind(planInfoItem: PlanInfoItem) {
         binding.planInfoItem = planInfoItem
+        binding.expansionLayoutPlanInfo.expansionListener = object: ExpansionLayout.ExpansionListener {
+            override fun onExpansionToggle(expansionLayout: ExpansionLayout, expanded: Boolean) {
+                super.onExpansionToggle(expansionLayout, expanded)
+                binding.planInfoItem?.expanded = expanded
+            }
+        }
+        if (planInfoItem.expanded != binding.expansionLayoutPlanInfo.expanded) {
+            binding.expansionLayoutPlanInfo.toggle(false)
+        }
         binding.executePendingBindings()
     }
 

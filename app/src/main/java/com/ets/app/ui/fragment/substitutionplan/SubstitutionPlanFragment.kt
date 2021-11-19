@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ets.app.R
 import com.ets.app.databinding.FragmentSubstitutionPlanBinding
-import com.ets.app.service.TimestampFormatter
+import com.ets.app.service.Timestamps
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -73,7 +73,8 @@ class SubstitutionPlanFragment : Fragment() {
         viewModel.substitutionPlan.observe(viewLifecycleOwner) { substitutionPlan ->
             substitutionPlan?.date?.let { planDateTimestamp ->
                 // Update action bar title to planDate of substitution-plan
-                (activity as AppCompatActivity).supportActionBar?.title = TimestampFormatter.formatDate(planDateTimestamp)
+                (activity as AppCompatActivity).supportActionBar?.title =
+                    Timestamps.formatDate(planDateTimestamp)
             }
         }
 
