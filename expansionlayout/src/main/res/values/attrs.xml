@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <declare-styleable name="ExpansionLayout">
+        <!-- Initial the expansion state -->
+        <attr name="expanded" format="boolean" />
+        <attr name="android:orientation" />
+        <!-- Duration of expansion animation in milliseconds -->
+        <attr name="expansionDuration" format="integer" />
+        <!-- Duration of collapsion animation in milliseconds -->
+        <attr name="collapsionDuration" format="integer" />
+        <!-- Indicator view (This view will be animated on expansion/collapsion). -->
+        <attr name="expansionIndicator" format="reference" />
+        <!-- Interpolator for expansion animation. -->
+        <attr name="expansionInterpolator" format="reference" />
+        <!-- Interpolator for collapsion animation. -->
+        <attr name="collapsionInterpolator" format="reference" />
+        <!-- Indicates whether expansion should be toggled on click events of header. -->
+        <attr name="toggleOnHeaderClick" format="boolean" />
+        <!-- Specifies how negative size values produced by animation are handled. -->
+        <attr name="negativeSizeMode" format="enum">
+            <!-- Keep and apply negative size values as calculated (can cause graphic bugs with some interpolators) -->
+            <enum name="keep" value="0" />
+            <!-- (Default) Use absolute value of size -->
+            <enum name="abs" value="1" />
+            <!-- If size is negative, ceil to 0 -->
+            <enum name="ceilToZero" value="2" />
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="ExpansionIndicator">
+        <!-- Rotation of indicator in angles when linked ExpansionLayout is collapsed -->
+        <attr name="collapsedRotation" format="float" />
+        <!-- Rotation of indicator in angles when linked ExpansionLayout is expanded -->
+        <attr name="expandedRotation" format="float" />
+    </declare-styleable>
+</resources>

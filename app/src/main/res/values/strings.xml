@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">@string/substitution_plan</string>
+    <string name="overview">Overview</string>
+    <string name="substitution_plan">Substitution plan</string>
+    <string name="previous_plans">Previous plans</string>
+    <string name="preferences">Preferences</string>
+    <string name="refresh">Refresh</string>
+    <string name="course">Course</string>
+    <string name="lessons">Lessons</string>
+    <string name="subject">Subject</string>
+    <string name="room">Room</string>
+    <string name="appearance">Appearance</string>
+    <string name="theme">Theme</string>
+    <string name="background_sync">Background sync</string>
+    <string name="allow_cellular_downloads">Allow cellular downloads</string>
+    <string name="sync_rate">Sync rate</string>
+    <string name="never">Never</string>
+    <string name="before_lessons">Before lessons (15min)</string>
+    <string name="subject_canceled">Canceled</string>
+    <string name="subject_tutorial">Tutorial</string>
+    <string name="subject_mathematics">Mathematics</string>
+    <string name="subject_physics">Physics</string>
+    <string name="subject_chemistry">Chemistry</string>
+    <string name="subject_biology">Biology</string>
+    <string name="subject_informatics">Informatics</string>
+    <string name="subject_german">German</string>
+    <string name="subject_english">English</string>
+    <string name="subject_french">French</string>
+    <string name="subject_spanish">Spanish</string>
+    <string name="subject_latin">Latin</string>
+    <string name="subject_music">Music</string>
+    <string name="subject_art">Art</string>
+    <string name="subject_drama">Drama</string>
+    <string name="subject_politics_economics">Politics &amp; Economics</string>
+    <string name="subject_history">History</string>
+    <string name="subject_religion_ev">Religion ev.</string>
+    <string name="subject_religion_cath">Religion cath.</string>
+    <string name="subject_ethics">Ethics</string>
+    <string name="subject_geography">Geography</string>
+    <string name="subject_sports">Sports</string>
+    <string name="subject_remediation">Remediation</string>
+    <string name="current_plan">Current plan</string>
+    <string name="switch_to_latest">Switch to latest</string>
+    <string name="allow_roaming">Allow roaming</string>
+    <string name="download_date">Download date</string>
+    <string name="download_time">Download time</string>
+    <string name="file_path">File path</string>
+
+    <!-- Sync Preferences -->
+    <string name="pref_key_theme">pref_theme</string>
+    <string name="pref_key_sync_rate">pref_sync_rate</string>
+    <string name="pref_key_allow_cellular_downloads">pref_download_using_cellular</string>
+    <string name="pref_key_sync_rate_before_lessons">pref_sync_rate_before_lessons</string>
+    <string name="pref_key_running_request_id">pref_key_pending_request_id</string>
+    <string name="pref_key_allow_roaming">pref_allow_roaming</string>
+</resources>

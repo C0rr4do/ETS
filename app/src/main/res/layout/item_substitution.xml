@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.ets.app.model.Correctness" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="substitutionItem"
+            type="com.ets.app.ui.fragment.substitutionplan.SubstitutionItem" />
+    </data>
+
+    <com.github.c0rr4do.expansionlayout.ExpansionLayout
+        android:id="@+id/expansionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:toggleOnHeaderClick="true"
+        tools:expanded="true">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/default_padding">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewCourses"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.25"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingEnd="@dimen/half_default_padding"
+                android:singleLine="true"
+                android:text="@{substitutionItem.courses}"
+                android:textAlignment="center"
+                tools:text="9a, 9b, 9c, 9d, 9e" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLessons"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.25"
+                android:paddingHorizontal="@dimen/half_default_padding"
+                android:text="@{substitutionItem.lessons}"
+                android:textAlignment="center"
+                tools:text="4" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewSubject"
+                correct="@{substitutionItem.subjectResourceId == substitutionItem.subSubjectResourceId ? Correctness.NONE : Correctness.INCORRECT}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.25"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingHorizontal="@dimen/half_default_padding"
+                android:singleLine="true"
+                android:text="@{substitutionItem.subjectResourceId}"
+                android:textAlignment="center"
+                tools:text="Ethics" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewRoom"
+                correct="@{substitutionItem.room.equals(substitutionItem.subRoom) ? Correctness.NONE : Correctness.INCORRECT}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.25"
+                android:paddingStart="@dimen/half_default_padding"
+                android:text="@{substitutionItem.room}"
+                android:textAlignment="center"
+                tools:text="207" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/default_padding"
+            android:paddingBottom="@dimen/default_padding">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.25"
+                    android:gravity="center_horizontal"
+                    android:paddingEnd="@dimen/half_default_padding"
+                    android:src="@drawable/compare_arrows" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewLessons2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.25"
+                    android:paddingHorizontal="@dimen/half_default_padding"
+                    android:text="@{substitutionItem.lessons}"
+                    android:textAlignment="center"
+                    tools:text="4" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewSubSubject"
+                    correct="@{substitutionItem.subjectResourceId == substitutionItem.subSubjectResourceId ? Correctness.NONE : Correctness.CORRECT}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.25"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:paddingHorizontal="@dimen/half_default_padding"
+                    android:singleLine="true"
+                    android:text="@{substitutionItem.subSubjectResourceId}"
+                    android:textAlignment="center"
+                    tools:text="Ethics" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewSubRoom"
+                    correct="@{substitutionItem.room.equals(substitutionItem.subRoom) ? Correctness.NONE : Correctness.CORRECT}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.25"
+                    android:paddingStart="@dimen/half_default_padding"
+                    android:text="@{substitutionItem.subRoom}"
+                    android:textAlignment="center"
+                    tools:text="207" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingTop="@dimen/half_default_padding"
+                android:text="@{substitutionItem.type}"
+                android:textAlignment="center"
+                android:textColor="@color/warning"
+                android:textSize="@dimen/default_text_size"
+                tools:text="Vertretung" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewInfoText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/half_default_padding"
+                android:text="@{substitutionItem.infoText}"
+                android:textAlignment="center"
+                android:textColor="@color/special"
+                android:visibility="@{substitutionItem.infoText.isEmpty() ? View.GONE : View.VISIBLE}"
+                tools:text="no info" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </com.github.c0rr4do.expansionlayout.ExpansionLayout>
+</layout>

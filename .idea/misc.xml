@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.22135416666666666" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/drawable/avd_refresh.xml" value="0.22135416666666666" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/drawable/open_in_new.xml" value="0.3828125" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/drawable/refresh.xml" value="0.221875" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/layout/activity_main.xml" value="0.19114583333333332" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/layout/fragment_capitalizeAndUnderscore(PreviousPlans).toLowerCase().xml" value="0.36277173913043476" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/layout/fragment_overview.xml" value="0.276268115942029" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/layout/fragment_previous_plans.xml" value="0.20572916666666666" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/layout/fragment_substitution_plan.xml" value="0.25" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/layout/fragment_substitutionplan.xml" value="0.36277173913043476" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/layout/item_plan_file.xml" value="0.20572916666666666" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/layout/item_plan_info.xml" value="0.32019927536231885" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/layout/item_substitution.xml" value="0.25" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/layout/item_substitution_plan_info.xml" value="0.2971014492753623" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/layout/iv_refresh.xml" value="0.20520833333333333" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/menu/navigation_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/menu/options_menu.xml" value="0.20520833333333333" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.22135416666666666" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.22135416666666666" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/xml/provider_paths.xml" value="0.20572916666666666" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/xml/root_preferences.xml" value="0.20520833333333333" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/xml/sync_rate_preferences.xml" value="0.20520833333333333" />
+        <entry key="..\:/dev/Android/Kotlin/ETSApp/expansionlayout/src/main/res/drawable/ic_baseline_expand_more_24.xml" value="0.3974358974358974" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation"
+    app:startDestination="@id/overviewFragment">
+
+    <fragment
+        android:id="@+id/overviewFragment"
+        android:name="com.ets.app.ui.fragment.overview.OverviewFragment"
+        android:label="@string/overview" >
+        <action
+            android:id="@+id/action_overviewFragment_to_substitutionPlanFragment"
+            app:destination="@id/substitutionPlanFragment" />
+        <action
+            android:id="@+id/action_overviewFragment_to_previousPlansFragment"
+            app:destination="@id/previousPlansFragment" />
+        <action
+            android:id="@+id/action_overviewFragment_to_preferencesFragment"
+            app:destination="@id/preferencesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/substitutionPlanFragment"
+        android:name="com.ets.app.ui.fragment.substitutionplan.SubstitutionPlanFragment"
+        android:label="@string/substitution_plan" >
+        <argument
+            android:name="substitutionPlanName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_substitutionPlanFragment_to_substitutionPlanFragment"
+            app:destination="@id/substitutionPlanFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/previousPlansFragment"
+        android:name="com.ets.app.ui.fragment.previousplans.PreviousPlansFragment"
+        android:label="@string/previous_plans" >
+        <action
+            android:id="@+id/action_previousPlansFragment_to_substitutionPlanFragment"
+            app:destination="@id/substitutionPlanFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/preferencesFragment"
+        android:name="com.ets.app.ui.fragment.preferences.PreferencesFragment"
+        android:label="PreferencesFragment" >
+        <action
+            android:id="@+id/action_preferencesFragment_to_syncRatePreferencesFragment"
+            app:destination="@id/syncRatePreferencesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/syncRatePreferencesFragment"
+        android:name="com.ets.app.ui.fragment.preferences.SyncRatePreferencesFragment"
+        android:label="SyncRatePreferencesFragment" />
+</navigation>

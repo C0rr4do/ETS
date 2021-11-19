@@ -1,0 +1,35 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:title="@string/preferences">
+
+    <PreferenceCategory app:title="@string/appearance">
+
+        <ListPreference
+            app:defaultValue="@string/default_theme"
+            app:entries="@array/theme_entries"
+            app:entryValues="@array/theme_values"
+            app:key="@string/pref_key_theme"
+            app:title="@string/theme"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/background_sync">
+        <Preference
+            android:key="@string/pref_key_sync_rate"
+            app:fragment="com.ets.app.ui.fragment.preferences.SyncRatePreferencesFragment"
+            app:title="@string/sync_rate" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="@bool/default_allow_cellular_downloads"
+            app:key="@string/pref_key_allow_cellular_downloads"
+            app:title="@string/allow_cellular_downloads" />
+
+        <SwitchPreferenceCompat
+            app:defaultValue="@bool/default_allow_roaming"
+            app:key="@string/pref_key_allow_roaming"
+            app:title="@string/allow_roaming"
+            tools:enabled="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

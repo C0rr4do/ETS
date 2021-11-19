@@ -1,6 +1,0 @@
-<resources>
-
-    <style name="Widget.Theme.Etsapp.MyView" parent="">
-        <item name="android:background">@color/grey_400</item>
-    </style>
-</resources>

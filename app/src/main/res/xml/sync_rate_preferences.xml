@@ -1,0 +1,8 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/background_sync">
+
+    <SwitchPreferenceCompat
+        app:defaultValue="@bool/default_sync_rate_before_lessons"
+        app:key="@string/pref_key_sync_rate_before_lessons"
+        app:title="@string/before_lessons" />
+</PreferenceScreen>
