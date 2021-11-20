@@ -177,13 +177,21 @@ class ParsingService @Inject constructor(
                 var line = lines[index]
                 try {
                     if (courses.result != null) {
-                        val lessons = parseLessons(line)
-                        val subject = parseSubject(line, lessons.endIndex)
-                        val room = parseRoom(line, subject.endIndex)
-                        val subSubject = parseSubject(line, room.endIndex)
-                        val subRoom = parseRoom(line, subSubject.endIndex)
-                        val type = parseType(line, subRoom.endIndex)
-                        val info = line.substring(type.endIndex).trim()
+                        var lessons = parseLessons(line)
+                        var subject = parseSubject(line, lessons.endIndex)
+                        var room = parseRoom(line, subject.endIndex)
+                        var subSubject = parseSubject(line, room.endIndex)
+                        var subRoom = parseRoom(line, subSubject.endIndex)
+                        var type = parseType(line, subRoom.endIndex)
+                        var info = line.substring(type.endIndex).trim()
+
+                        if (subSubject.result == Subject.UNKNOWN) {
+                            if (type.result == "Vertretung" || type.result == "Fachbetreuung") {
+                                subSubject.result = subject.result
+                            } else if (type.result == "frei") {
+                                subSubject.result = Subject.CANCELED
+                            }
+                        }
 
                         substitutions.add(
                             Substitution(
@@ -330,9 +338,9 @@ class ParsingService @Inject constructor(
 
     data class CourseParserData(val result: List<Course>?, val lines: Int)
 
-    data class LessonParserData(val result: IntRange, val endIndex: Int)
+    data class LessonParserData(var result: IntRange, val endIndex: Int)
 
-    data class SubjectParserData(val result: Subject, val endIndex: Int)
+    data class SubjectParserData(var result: Subject, val endIndex: Int)
 
-    data class ParserData(val result: String, val endIndex: Int)
+    data class ParserData(var result: String, val endIndex: Int)
 }
