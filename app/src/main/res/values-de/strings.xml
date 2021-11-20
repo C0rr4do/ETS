@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">@string/substitution_plan</string>
+    <string name="overview">Übersicht</string>
+    <string name="substitution_plan">Vertretungsplan</string>
+    <string name="previous_plans">Vorherige Pläne</string>
+    <string name="preferences">Einstellungen</string>
+    <string name="refresh">Neu laden</string>
+    <string name="course">Kurs</string>
+    <string name="lessons">Stunden</string>
+    <string name="subject">Fach</string>
+    <string name="room">Raum</string>
+    <string name="appearance">Darstellung</string>
+    <string name="theme">Design</string>
+    <string name="background_sync">Hintergrundsynchronisierung</string>
+    <string name="allow_cellular_downloads">Downloads über Mobilfunk</string>
+    <string name="sync_rate">Synchronisierungsrate</string>
+    <string name="never">Niemals</string>
+    <string name="before_lessons">(15min) Vor Unterricht</string>
+    <string name="subject_canceled">Fällt aus</string>
+    <string name="subject_tutorial">Tutorium</string>
+    <string name="subject_mathematics">Mathematik</string>
+    <string name="subject_physics">Physik</string>
+    <string name="subject_chemistry">Chemie</string>
+    <string name="subject_biology">Biologie</string>
+    <string name="subject_informatics">Informatik</string>
+    <string name="subject_german">Deutsch</string>
+    <string name="subject_english">Englisch</string>
+    <string name="subject_french">Französisch</string>
+    <string name="subject_spanish">Spanisch</string>
+    <string name="subject_latin">Latein</string>
+    <string name="subject_music">Musik</string>
+    <string name="subject_art">Kunst</string>
+    <string name="subject_drama">Darstellendes Spiel</string>
+    <string name="subject_politics_economics">Politik und Wirtschaft</string>
+    <string name="subject_history">Geschichte</string>
+    <string name="subject_religion_ev">Religion ev.</string>
+    <string name="subject_religion_cath">Religion kath.</string>
+    <string name="subject_ethics">Ethik</string>
+    <string name="subject_geography">Erdkunde</string>
+    <string name="subject_sports">Sport</string>
+    <string name="subject_remediation">Förderunterricht</string>
+    <string name="current_plan">Aktueller Plan</string>
+    <string name="switch_to_latest">Zu letztem Plan wechseln</string>
+    <string name="allow_roaming">Roaming erlauben</string>
+    <string name="download_date">Download Datum</string>
+    <string name="download_time">Download Zeit</string>
+    <string name="file_path">Dateipfad</string>
+
+    <!-- Sync Preferences -->
+    <string name="pref_key_theme">pref_theme</string>
+    <string name="pref_key_sync_rate">pref_sync_rate</string>
+    <string name="pref_key_allow_cellular_downloads">pref_download_using_cellular</string>
+    <string name="pref_key_sync_rate_before_lessons">pref_sync_rate_before_lessons</string>
+    <string name="pref_key_running_request_id">pref_key_pending_request_id</string>
+    <string name="pref_key_allow_roaming">pref_allow_roaming</string>
+</resources>
