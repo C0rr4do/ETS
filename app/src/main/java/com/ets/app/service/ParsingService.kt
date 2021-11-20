@@ -3,6 +3,7 @@ package com.ets.app.service
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -15,6 +16,8 @@ import com.tom_roush.pdfbox.text.PDFTextStripper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormatter
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
@@ -38,6 +41,7 @@ class ParsingService @Inject constructor(
     private val subjectRegex = Regex("""[A-Z\u00C4\u00D6\u00DC]+\s""")
     private val typeRegex =
         Regex("""Raumänderung|Vertretung|frei|Trotz Absenz|Fachbetreuung|Sondereins\.|Verlegung|Unterricht geändert""")
+    private val dateRegex = Regex("""Vertretungen\s+(\d{2})\.(\d{2})\..+""")
 
     @Volatile
     private var parsingJobCount = 0
@@ -88,21 +92,8 @@ class ParsingService @Inject constructor(
                 // Get file that corresponds to 'planName'
                 val file = fileService.getFileByName(planName)
 
-                var parsedPlan: SubstitutionPlan? = null
-                try {
-                    // Parse substitution-plan of file
-                    parsedPlan = parsePlan(planName, file)
-                } catch (e: Exception) {
-                    with(Handler(Looper.getMainLooper())) {
-                        post {
-                            Toast.makeText(
-                                context,
-                                "Error while parsing substitution-plan",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
+                // Parse substitution-plan of file
+                var parsedPlan = parsePlan(planName, file)
 
                 // If substitution-plan was parsed successfully, store result in cache
                 parsedPlan?.let {
@@ -125,20 +116,47 @@ class ParsingService @Inject constructor(
     }
 
     private fun parseDate(file: File?): Long {
-        // TODO Implement functionality
-        if (file == null) {
-            return Timestamps.UNKNOWN_TIMESTAMP
-        } else {
+        if (file == null) return Timestamps.UNKNOWN_TIMESTAMP
+        else {
+            val doc = PDDocument.load(file, getPassword())
+
+            val stripper = PDFTextStripper()
+            stripper.startPage = 1
+            stripper.endPage = 1
+
+            val lines = stripper.getText(doc).split('\n')
+            doc.close()
+            var index = 0
+
+            while (index < lines.size) {
+                if (dateRegex.matches(lines[index])) {
+                    return parseDate(lines[index])
+                }
+
+                index++
+            }
+
             return Timestamps.UNKNOWN_TIMESTAMP
         }
+    }
+
+    private fun parseDate(line: String): Long {
+        val match = dateRegex.find(line)
+
+        return if (match != null) {
+            val day = match.groupValues[1].toInt()
+            val month = match.groupValues[2].toInt()
+            val year = DateTime.now().year
+
+            DateTime(year, month, day, 0, 0, 0).millis
+        } else Timestamps.UNKNOWN_TIMESTAMP
     }
 
     private fun parsePlan(planName: String, file: File?): SubstitutionPlan? {
         return if (file == null) {
             null
         } else {
-            val data = file.readBytes()
-            val doc = PDDocument.load(data, getPassword())
+            val doc = PDDocument.load(file, getPassword())
 
             val stripper = PDFTextStripper()
             stripper.startPage = 1
@@ -149,32 +167,56 @@ class ParsingService @Inject constructor(
 
             val lines = text.split("\n")
             val substitutions = mutableListOf<Substitution>()
+            var date = Timestamps.UNKNOWN_TIMESTAMP
 
             var index = 0
             var id = 0
 
             while (index < lines.size) {
                 val courses = parseCourse(lines, index)
+                var line = lines[index]
+                try {
+                    if (courses.result != null) {
+                        val lessons = parseLessons(line)
+                        val subject = parseSubject(line, lessons.endIndex)
+                        val room = parseRoom(line, subject.endIndex)
+                        val subSubject = parseSubject(line, room.endIndex)
+                        val subRoom = parseRoom(line, subSubject.endIndex)
+                        val type = parseType(line, subRoom.endIndex)
+                        val info = line.substring(type.endIndex).trim()
 
-                if (courses.result != null) {
-                    var line = lines[index]
-                    val lessons = parseLessons(line)
-                    val subject = parseSubject(line, lessons.endIndex)
-                    val room = parseRoom(line, subject.endIndex)
-                    val subSubject = parseSubject(line, room.endIndex)
-                    val subRoom = parseRoom(line, subSubject.endIndex)
-                    val type = parseType(line, subRoom.endIndex)
-                    val info = line.substring(type.endIndex).trim()
-
-                    // println("${course.result}\t${lessons.result}\t${subject.result}\t${room.result}\t${subSubject.result}\t${subRoom.result}\t${type.result}\t${info}")
-                    substitutions.add(Substitution(id++, courses.result, lessons.result, subject.result, room.result, subSubject.result, subRoom.result, type.result, info))
-                    index += courses.lines + 1
-                } else {
-                    index++
+                        substitutions.add(
+                            Substitution(
+                                id++,
+                                courses.result,
+                                lessons.result,
+                                subject.result,
+                                room.result,
+                                subSubject.result,
+                                subRoom.result,
+                                type.result,
+                                info
+                            )
+                        )
+                        index += courses.lines
+                    } else if (dateRegex.containsMatchIn(line)) {
+                        date = parseDate(line)
+                    }
+                } catch (e: Exception) {
+                    with(Handler(Looper.getMainLooper())) {
+                        post {
+                            Toast.makeText(
+                                context,
+                                "Error while parsing substitution-plan",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
+                index++
             }
 
-            SubstitutionPlan(planName.toLong(), parseDate(file), "", arrayOf(), substitutions)
+            SubstitutionPlan(planName.toLong(), date, "", arrayOf(), substitutions)
         }
     }
 
@@ -236,11 +278,12 @@ class ParsingService @Inject constructor(
 
             val parts = str.split("-")
             val start = parts[0].toInt()
-            if (parts.size == 2) {
+
+            return if (parts.size == 2) {
                 val end = parts[1].toInt()
-                return LessonParserData(IntRange(start, end), endIndex)
+                LessonParserData(IntRange(start, end), endIndex)
             } else {
-                return LessonParserData(IntRange(start, start), endIndex)
+                LessonParserData(IntRange(start, start), endIndex)
             }
         }
 
@@ -250,7 +293,10 @@ class ParsingService @Inject constructor(
     private fun parseSubject(line: String, index: Int): SubjectParserData {
         val match = subjectRegex.find(line, index)
 
-        return if (match != null) SubjectParserData(getSubject(match.value.trim()), match.range.last + 1)
+        return if (match != null) SubjectParserData(
+            getSubject(match.value.trim()),
+            match.range.last + 1
+        )
         else SubjectParserData(Subject.UNKNOWN, index)
     }
 

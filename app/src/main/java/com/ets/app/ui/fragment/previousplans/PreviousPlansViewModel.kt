@@ -55,8 +55,7 @@ class PreviousPlansViewModel @Inject constructor(
         val originalFilePath =
             fileService.getFileByName(planName)?.absolutePath
 
-        val planDate =
-            parsingService.getParsedDate(planName)?.let { Timestamps.formatDate(it) }
+        val planDate = parsingService.getParsedDate(planName)?.let { Timestamps.formatDate(it) }
 
         val downloadDate = Timestamps.formatDate(planName.toLong())
 
