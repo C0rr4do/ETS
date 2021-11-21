@@ -118,6 +118,7 @@ class ParsingService @Inject constructor(
     private fun parseDate(file: File?): Long {
         if (file == null) return Timestamps.UNKNOWN_TIMESTAMP
         else {
+            // load pdf document from file and extract text
             val doc = PDDocument.load(file, getPassword())
 
             val stripper = PDFTextStripper()
@@ -128,34 +129,47 @@ class ParsingService @Inject constructor(
             doc.close()
             var index = 0
 
+            // iterate through lines
             while (index < lines.size) {
+                // find line which matches the pattern
                 if (dateRegex.matches(lines[index])) {
+                    // parse date
                     return parseDate(lines[index])
                 }
 
+                // goto next line
                 index++
             }
 
+            // return unknown timestamp if no line was found
             return Timestamps.UNKNOWN_TIMESTAMP
         }
     }
 
+    // parses the date in the specified line
     private fun parseDate(line: String): Long {
+        // check if line matches
         val match = dateRegex.find(line)
 
         return if (match != null) {
+            // extract day and month
             val day = match.groupValues[1].toInt()
             val month = match.groupValues[2].toInt()
+            // get the current year
             val year = DateTime.now().year
 
+            // return milliseconds of the parsed time
             DateTime(year, month, day, 0, 0, 0).millis
         } else Timestamps.UNKNOWN_TIMESTAMP
     }
 
+    // parses a substitution plan from the specified file
     private fun parsePlan(planName: String, file: File?): SubstitutionPlan? {
+        // return null if no file was given
         return if (file == null) {
             null
         } else {
+            // load pdf document and extract all text
             val doc = PDDocument.load(file, getPassword())
 
             val stripper = PDFTextStripper()
@@ -165,6 +179,7 @@ class ParsingService @Inject constructor(
             val text: String = stripper.getText(doc)
             doc.close()
 
+            // split text into lines and create variables needed for parsing
             val lines = text.split("\n")
             val substitutions = mutableListOf<Substitution>()
             var date = Timestamps.UNKNOWN_TIMESTAMP
@@ -172,11 +187,16 @@ class ParsingService @Inject constructor(
             var index = 0
             var id = 0
 
+            // iterate through lines
             while (index < lines.size) {
+                // try to parse courses from the line
                 val courses = parseCourse(lines, index)
+                // select the current line
                 var line = lines[index]
                 try {
+                    // courses where found on this line
                     if (courses.result != null) {
+                        // extract lessons, subjects, rooms and additional substitution information
                         var lessons = parseLessons(line)
                         var subject = parseSubject(line, lessons.endIndex)
                         var room = parseRoom(line, subject.endIndex)
@@ -185,6 +205,7 @@ class ParsingService @Inject constructor(
                         var type = parseType(line, subRoom.endIndex)
                         var info = line.substring(type.endIndex).trim()
 
+                        // set the right substitution subject if no substitution subject was parsed
                         if (subSubject.result == Subject.UNKNOWN) {
                             if (type.result == "Vertretung" || type.result == "Fachbetreuung") {
                                 subSubject.result = subject.result
@@ -193,6 +214,7 @@ class ParsingService @Inject constructor(
                             }
                         }
 
+                        // add new substitution object to collection
                         substitutions.add(
                             Substitution(
                                 id++,
@@ -206,11 +228,15 @@ class ParsingService @Inject constructor(
                                 info
                             )
                         )
+
+                        // increase the line index by number of lines processed
                         index += courses.lines
                     } else if (dateRegex.containsMatchIn(line)) {
+                        // parse substitution plan date if was found on line
                         date = parseDate(line)
                     }
                 } catch (e: Exception) {
+                    // display exceptions on ui
                     with(Handler(Looper.getMainLooper())) {
                         post {
                             Toast.makeText(
@@ -221,36 +247,49 @@ class ParsingService @Inject constructor(
                         }
                     }
                 }
+
+                // increase the line index by 1
                 index++
             }
 
+            // return substitution plan
             SubstitutionPlan(planName.toLong(), date, "", arrayOf(), substitutions)
         }
     }
 
+    // extracts courses from current and following lines
     private fun parseCourse(lines: List<String>, index: Int): CourseParserData {
+        // create variables
         var courseString = ""
         var curr = index;
 
         do {
+            // search for courses on current line
             var line = lines[curr]
             var match = courseRegex.findAll(line)
 
             var lastMatch = true;
+            // iterate through found matches and store them
             match.forEach {
                 courseString += it.value
 
+                // determine whether further matches are to be expected or not
                 lastMatch = it.groupValues[1] == ""
             }
 
+            // increase line index if further matches are to be expected
             if (!lastMatch) {
                 curr++
             }
-        } while (!lastMatch && curr < lines.size)
 
+        } while (!lastMatch && curr < lines.size) // stop parsing if all lines were processed or no further matches are to be expected
+
+        // if courses were found
         if (courseString.isNotEmpty()) {
+            // split course string
             var courseStringParts = courseString.split(',').map { it.trim() }
 
+            // parse course strings
             var courses = courseStringParts.map {
                 if (it.startsWith("Q") || it.startsWith("E")) {
                     val parts = it.split(' ')
@@ -276,9 +315,12 @@ class ParsingService @Inject constructor(
         return CourseParserData(null, index)
     }
 
+    // parses lessons from the specified line
     private fun parseLessons(line: String): LessonParserData {
+        // search for lessons in given line
         val match = lessonRegex.find(line)
 
+        // parse courses if found
         if (match != null) {
             val endIndex = match.range.last + 1
 
@@ -298,36 +340,51 @@ class ParsingService @Inject constructor(
         return LessonParserData(IntRange(0, 0), 0)
     }
 
+    // parse subject from specified line at start index
     private fun parseSubject(line: String, index: Int): SubjectParserData {
+        // search for subject at given position
         val match = subjectRegex.find(line, index)
 
-        return if (match != null) SubjectParserData(getSubject(match.value.trim()), match.range.last + 1)
+        // return result
+        return if (match != null) SubjectParserData(
+            getSubject(match.value.trim()),
+            match.range.last + 1
+        )
         else SubjectParserData(Subject.UNKNOWN, index)
     }
 
+    // parse room from specified line at start index
     private fun parseRoom(line: String, index: Int): ParserData {
+        // search for room at given position
         val match = roomRegex.find(line, index)
 
+        // return result
         return if (match != null) ParserData(match.value.trim(), match.range.last + 1)
         else ParserData("", index)
     }
 
+    // parse substitution type from specified line at start index
     private fun parseType(line: String, index: Int): ParserData {
+        // search for substitution type at given position
         val match = typeRegex.find(line, index)
 
+        // return result
         return if (match != null) ParserData(match.value.trim(), match.range.last + 1)
         else ParserData("", index)
     }
 
+    // get subject
     private fun getSubject(id: String): Subject {
+        // find subject in class
         val subject = Subject.values().firstOrNull { it.id == id }
+        // return subject if exists and return it otherwise log a message and throw an exception
         if (subject == null) {
             Timber.e("Subject not found: $id")
             throw NoSuchElementException()
         }
         return subject
     }
-
+    
     private fun getPassword(): String {
         // TODO Do not hardcode this
         return "pennenspatz"
