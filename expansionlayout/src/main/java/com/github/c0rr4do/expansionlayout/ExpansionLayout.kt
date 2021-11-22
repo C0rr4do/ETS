@@ -13,7 +13,8 @@ import androidx.core.animation.doOnStart
 import androidx.core.view.children
 import kotlin.math.abs
 
-class ExpansionLayout(context: Context, attrs: AttributeSet? = null) : LinearLayoutCompat(context, attrs) {
+class ExpansionLayout(context: Context, attrs: AttributeSet? = null) :
+    LinearLayoutCompat(context, attrs) {
     private var _expanded: Boolean
 
     /**
@@ -102,11 +103,8 @@ class ExpansionLayout(context: Context, attrs: AttributeSet? = null) : LinearLay
      *
      * It will be called when [expanded] changes.
      */
-    var expansionListener: ExpansionListener?
+    val expansionListener: ExpansionListener?
         get() = _expansionListener
-        set(value) {
-            _expansionListener = value
-        }
 
     private var _toggleOnHeaderClick: Boolean
 
@@ -169,7 +167,8 @@ class ExpansionLayout(context: Context, attrs: AttributeSet? = null) : LinearLay
 
                 // Load 'expansionDuration' from xml attributes
                 // Default: 300 (-> androids default duration)
-                _expansionDuration = getInt(R.styleable.ExpansionLayout_expansionDuration, 300).toLong()
+                _expansionDuration =
+                    getInt(R.styleable.ExpansionLayout_expansionDuration, 300).toLong()
 
                 getInt(R.styleable.ExpansionLayout_collapsionDuration, -1).toLong().let {
                     _collapsionDuration = if (it > -1) it else null
@@ -177,7 +176,8 @@ class ExpansionLayout(context: Context, attrs: AttributeSet? = null) : LinearLay
 
                 // Load 'expansionIndicator' from xml attributes
                 // Default: 0 (-> empty resource id)
-                _initialExpansionIndicatorId = getResourceId(R.styleable.ExpansionLayout_expansionIndicator, 0)
+                _initialExpansionIndicatorId =
+                    getResourceId(R.styleable.ExpansionLayout_expansionIndicator, 0)
 
                 // Load interpolator from xml attributes
                 // Default: androids default interpolator
@@ -192,12 +192,14 @@ class ExpansionLayout(context: Context, attrs: AttributeSet? = null) : LinearLay
                 // Load interpolator from xml attributes
                 // Default: androids default interpolator
                 getResourceId(R.styleable.ExpansionLayout_collapsionInterpolator, 0).let {
-                    _collapsionInterpolator = if (it > 0) AnimationUtils.loadInterpolator(context, it) else null
+                    _collapsionInterpolator =
+                        if (it > 0) AnimationUtils.loadInterpolator(context, it) else null
                 }
 
                 // Load 'toggleOnHeaderClick' from xml attributes
                 // Default: false
-                _toggleOnHeaderClick = getBoolean(R.styleable.ExpansionLayout_toggleOnHeaderClick, false)
+                _toggleOnHeaderClick =
+                    getBoolean(R.styleable.ExpansionLayout_toggleOnHeaderClick, false)
 
                 // Load 'negativeSizeMode from xml attributes
                 // Default: keep negative values
@@ -235,17 +237,24 @@ class ExpansionLayout(context: Context, attrs: AttributeSet? = null) : LinearLay
     }
 
     /**
+     * Expand/collapse this [ExpansionLayout]
+     */
+    fun setExpanded(value: Boolean, animate: Boolean = true) {
+        executeExpansion(value, animate)
+    }
+
+    /**
      * Expands this [ExpansionLayout]
      */
     fun expand(animate: Boolean = true) {
-        executeExpansion(true, animate)
+        setExpanded(true, animate)
     }
 
     /**
      * Collapses this [ExpansionLayout]
      */
     fun collapse(animate: Boolean = true) {
-        executeExpansion(false, animate)
+        setExpanded(false, animate)
     }
 
     /**
@@ -257,6 +266,26 @@ class ExpansionLayout(context: Context, attrs: AttributeSet? = null) : LinearLay
         } else {
             expand(animate)
         }
+    }
+
+    /**
+     * Register a callback to be invoked when this [ExpansionLayout] is expanded/collapsed
+     */
+    fun setExpansionListener(listener: (expansionLayout: ExpansionLayout, expanded: Boolean) -> Unit) {
+        this._expansionListener = object: ExpansionListener {
+            override fun onExpansionToggle(expansionLayout: ExpansionLayout, expanded: Boolean) {
+                super.onExpansionToggle(expansionLayout, expanded)
+                listener(expansionLayout, expanded)
+            }
+        }
+    }
+
+    /**
+     * Register a callback to be invoked when this [ExpansionLayout] is expanded/collapsed
+     * or its expansion/collapsion-animation is finished
+     */
+    fun setExpansionListener(listener: ExpansionListener?) {
+        this._expansionListener = listener
     }
 
     internal fun attachToGroup(expansionLayoutGroup: ExpansionLayoutGroup) {
@@ -292,16 +321,22 @@ class ExpansionLayout(context: Context, attrs: AttributeSet? = null) : LinearLay
 
         // If animation is disabled
         if (expansionDuration == 0L) {
+            // Set target width and height directly
+
             // If there is a content view
             contentView?.apply {
                 layoutParams =
-                    layoutParams.apply { if (animateWidth == true) width = targetSize!! else height = targetSize!! }
+                    layoutParams.apply {
+                        if (animateWidth == true) width = targetSize!! else height = targetSize!!
+                    }
             }
             // If there is an indicator view
             expansionIndicator?.apply {
                 rotation = targetRotation!!
             }
         } else {
+            // Set animate target width and height
+
             val animators = mutableSetOf<Animator>()
 
             // If there is a content view
@@ -319,9 +354,11 @@ class ExpansionLayout(context: Context, attrs: AttributeSet? = null) : LinearLay
                 val mergedAnimation = AnimatorSet().apply {
                     playTogether(animators)
 
-                    duration = if (expand) expansionDuration else collapsionDuration ?: expansionDuration
+                    duration =
+                        if (expand) expansionDuration else collapsionDuration ?: expansionDuration
 
-                    interpolator = if (expand) expansionInterpolator else collapsionInterpolator ?: expansionInterpolator
+                    interpolator = if (expand) expansionInterpolator else collapsionInterpolator
+                        ?: expansionInterpolator
 
 
                     doOnStart {
@@ -349,10 +386,17 @@ class ExpansionLayout(context: Context, attrs: AttributeSet? = null) : LinearLay
         expanded = expand
     }
 
-    private fun sizeAnimator(view: View, target: Int, animateWidth: Boolean = false): ValueAnimator {
+    private fun sizeAnimator(
+        view: View,
+        target: Int,
+        animateWidth: Boolean = false
+    ): ValueAnimator {
         view.apply {
             val values =
-                floatArrayOf((if (animateWidth) layoutParams.width else layoutParams.height).toFloat(), target.toFloat())
+                floatArrayOf(
+                    (if (animateWidth) layoutParams.width else layoutParams.height).toFloat(),
+                    target.toFloat()
+                )
 
             val contentViewAnimator = ValueAnimator.ofFloat(*values)
 
@@ -361,10 +405,13 @@ class ExpansionLayout(context: Context, attrs: AttributeSet? = null) : LinearLay
                 var newLength = (it.animatedValue as Float).toInt()
 
                 if (negativeSizeMode == NegativeSizeMode.ABS) newLength = abs(newLength)
-                else if (negativeSizeMode == NegativeSizeMode.CEIL_TO_ZERO && newLength < 0) newLength = 0
+                else if (negativeSizeMode == NegativeSizeMode.CEIL_TO_ZERO && newLength < 0) newLength =
+                    0
 
                 // Apply updated width/height to 'view'
-                layoutParams = layoutParams.apply { if (animateWidth) width = newLength else height = newLength }
+                layoutParams = layoutParams.apply {
+                    if (animateWidth) width = newLength else height = newLength
+                }
             }
             return contentViewAnimator
         }
