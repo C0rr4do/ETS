@@ -36,11 +36,8 @@ class PlanInfoViewHolder private constructor(private val binding: ItemPlanInfoBi
 
     fun bind(planInfoItem: PlanInfoItem) {
         binding.planInfoItem = planInfoItem
-        binding.expansionLayoutPlanInfo.expansionListener = object: ExpansionLayout.ExpansionListener {
-            override fun onExpansionToggle(expansionLayout: ExpansionLayout, expanded: Boolean) {
-                super.onExpansionToggle(expansionLayout, expanded)
-                binding.planInfoItem?.expanded = expanded
-            }
+        binding.expansionLayoutPlanInfo.setExpansionListener { _, expanded ->
+            binding.planInfoItem?.expanded = expanded
         }
         if (planInfoItem.expanded != binding.expansionLayoutPlanInfo.expanded) {
             binding.expansionLayoutPlanInfo.toggle(false)

@@ -4,6 +4,7 @@
     <string name="substitution_plan">Substitution plan</string>
     <string name="previous_plans">Previous plans</string>
     <string name="preferences">Preferences</string>
+    <string name="sync_rate_preferences">Sync rate preferences</string>
     <string name="refresh">Refresh</string>
     <string name="course">Course</string>
     <string name="lessons">Lessons</string>

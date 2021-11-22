@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ets.app.R
 import com.ets.app.databinding.ItemSubstitutionBinding
-import com.github.c0rr4do.expansionlayout.ExpansionLayout
 
 class SubstitutionAdapter :
     ListAdapter<SubstitutionItem, SubstitutionViewHolder>(SubstitutionItemCallback()) {
@@ -27,11 +26,8 @@ class SubstitutionViewHolder private constructor(private val binding: ItemSubsti
 
     fun bind(substitutionItem: SubstitutionItem) {
         binding.substitutionItem = substitutionItem
-        binding.expansionLayoutSubstitution.expansionListener = object: ExpansionLayout.ExpansionListener {
-            override fun onExpansionToggle(expansionLayout: ExpansionLayout, expanded: Boolean) {
-                super.onExpansionToggle(expansionLayout, expanded)
-                binding.substitutionItem?.expanded = expanded
-            }
+        binding.expansionLayoutSubstitution.setExpansionListener { _, expanded ->
+            binding.substitutionItem?.expanded = expanded
         }
         if (substitutionItem.expanded != binding.expansionLayoutSubstitution.expanded) {
             binding.expansionLayoutSubstitution.toggle(false)
