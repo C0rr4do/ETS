@@ -3,9 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/item_plan_info.xml" value="0.1" />
-        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/item_substitution.xml" value="0.1" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/fragment_overview.xml" value="0.20520833333333333" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/fragment_previous_plans.xml" value="0.25" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/fragment_substitution_plan.xml" value="0.20520833333333333" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/item_plan_info.xml" value="0.33" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/item_plan_info_cl.xml" value="0.3555253623188406" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/item_substitution.xml" value="0.33" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/item_time.xml" value="0.5" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/preference_dialog_time.xml" value="0.34556159420289856" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/layout/preference_times_list.xml" value="0.35054347826086957" />
         <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/xml/root_preferences.xml" value="0.2557291666666667" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/app/src/main/res/xml/sync_rate_preferences.xml" value="0.2" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/timelistpreference/src/main/res/drawable/delete.xml" value="0.3828125" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/timelistpreference/src/main/res/layout/item_time.xml" value="0.3351449275362319" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/timelistpreference/src/main/res/layout/preference_dialog_time_list.xml" value="0.3351449275362319" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/timelistpreference/src/main/res/layout/settings_activity.xml" value="0.3351449275362319" />
+        <entry key="..\:/dev/Android/Kotlin/ETS/timelistpreference/src/main/res/layout/testlayout.xml" value="0.3351449275362319" />
         <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.22135416666666666" />
         <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/drawable/avd_refresh.xml" value="0.22135416666666666" />
         <entry key="..\:/dev/Android/Kotlin/ETSApp/app/src/main/res/drawable/open_in_new.xml" value="0.3828125" />

@@ -7,7 +7,7 @@
     <item
         android:id="@id/substitutionPlanFragment"
         android:icon="@drawable/autorenew"
-        android:title="@string/current_plan" />
+        android:title="@string/latest_plan" />
     <item
         android:id="@id/previousPlansFragment"
         android:icon="@drawable/history"

@@ -1,18 +1,16 @@
 package com.ets.app.service
 
-import android.app.ActivityManager
 import android.app.DownloadManager
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
+import android.telephony.TelephonyManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.ets.app.R
+import com.ets.app.service.SafeToast.toastSafely
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,7 +36,7 @@ class SyncService @Inject constructor(
             .getLong(prefKeyRunningRequestId, -1L)
 
     fun downloadLatestPlan() {
-        _syncing.value = true
+        _syncing.postValue(true)
         removePendingRequest()
 
         // Generate new request
@@ -80,15 +78,10 @@ class SyncService @Inject constructor(
 
         if (!allowCellularDownloads
             && getConnectionType(context) == NetworkCapabilities.TRANSPORT_CELLULAR
-            && appIsRunning(context)
         ) {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    context,
-                    "Starting download when wifi is available",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            toastSafely(context, context.getString(R.string.starting_download_when_wifi_is_available))
+        } else if (!allowRoaming && isNetworkRoaming()) {
+            toastSafely(context, context.getString(R.string.starting_download_when_network_is_not_roaming_anymore))
         }
 
         return DownloadManager.Request(Uri.parse(SUBSTITUTION_PLAN_URL)).run {
@@ -171,6 +164,11 @@ class SyncService @Inject constructor(
         return -1
     }
 
+    private fun isNetworkRoaming(): Boolean {
+        val telephony = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        return telephony.isNetworkRoaming
+    }
+
     suspend fun onDownloadFinished() {
         // Remove pending request id
         PreferenceManager.getDefaultSharedPreferences(context).edit().run {
@@ -185,19 +183,5 @@ class SyncService @Inject constructor(
     companion object {
         const val SUBSTITUTION_PLAN_URL =
             "https://edertalschule.de/service/service-2/vertretungsplan.html?download=69:vertretungsplan-schuelerversion"
-
-        private fun appIsRunning(context: Context): Boolean {
-            val activityManager =
-                context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-            val runningProcesses = activityManager.runningAppProcesses
-            if (runningProcesses != null) {
-                for (processes in runningProcesses) {
-                    if (processes.processName == context.packageName) {
-                        return true
-                    }
-                }
-            }
-            return false
-        }
     }
 }

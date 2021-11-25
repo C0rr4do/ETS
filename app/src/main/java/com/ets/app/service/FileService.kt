@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.ets.app.ETSApplication
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileInputStream
@@ -15,7 +15,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FileService @Inject constructor(@ApplicationContext private val context: Context) {
+class FileService @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val notificationService: NotificationService
+) {
     val plansSubPath = "plans"
 
     private val _planNames = MutableLiveData<List<String>>()
@@ -36,16 +39,31 @@ class FileService @Inject constructor(@ApplicationContext private val context: C
             // Set reloading to true, in order to prevent concurrent requests
             _reloading.postValue(true)
 
+            var anyDuplicates: Boolean
+
             withContext(Dispatchers.IO) {
                 // Retrieve list of plan-names from fileSystem and post new list, so UI can be updated
-                _planNames.postValue(reloadPlanNamesFromFileSystem())
+                anyDuplicates = reloadPlanNamesFromFileSystem()
+
+                // Show notification if app is not running
+                if (!(context as ETSApplication).appIsStarted) {
+                    notificationService.hideBackgroundSyncRunning()
+                    val planName = _planNames.value!!.firstOrNull()
+                    planName?.let {
+                        if (anyDuplicates) {
+                            notificationService.notifyNewPlanAvailable(it)
+                        } else {
+                            notificationService.notifyYourPlanIsUpToDate(it)
+                        }
+                    }
+                }
 
                 // Set reloading to false after request has been processed
                 _reloading.postValue(false)
             }
 
             // Return 'true' because request is being processed
-            return true
+            return anyDuplicates
         } else {
             // Return 'false' because request was not processed (because another request was running already)
             return false
@@ -56,12 +74,9 @@ class FileService @Inject constructor(@ApplicationContext private val context: C
      * @return true, only if corresponding file was found and deleted
      */
     suspend fun deletePlanFile(planName: String): Boolean {
-        return withContext(Dispatchers.IO) {
-            getFileByName(planName)?.run {
-                delete()
-                return@withContext true
-            } ?: return@withContext false
-        }
+        val success = getFileByName(planName)?.delete() == true
+        requestPlanNamesReload()
+        return success
     }
 
     suspend fun onDownloadFinished() {
@@ -77,21 +92,24 @@ class FileService @Inject constructor(@ApplicationContext private val context: C
     }
 
     /**
-     * Also deletes all duplicate plan-files
+     * Reloads all planNames from file system
+     * and deletes all duplicate plan-files
      *
-     * @return All planNames of locally stored plans
+     * @return Whether any duplicates where found and deleted
      */
-    private fun reloadPlanNamesFromFileSystem(): List<String> {
+    private fun reloadPlanNamesFromFileSystem(): Boolean {
         // Load all files from filesystem
         val loadedFiles =
             plansDirectory().listFiles()?.toMutableList()
+
+        var foundAnyDuplicates = false
 
         if (!loadedFiles.isNullOrEmpty()) {
             // Sort and reverse (the first planName will be the of the latest plan)
             loadedFiles.sort()
             loadedFiles.reverse()
 
-            val deletedFiles = mutableSetOf<File>()
+            val duplicateFiles = mutableSetOf<File>()
 
             loadedFiles.forEach { file1 ->
                 // Find duplicate files
@@ -102,18 +120,20 @@ class FileService @Inject constructor(@ApplicationContext private val context: C
                         && filesAreEqual(file1, file2) // file1 and file2 are contentEqual
                     ) {
                         // Add file to 'duplicateFiles' so that it can be deleted later on
-                        deletedFiles.add(file2)
+                        duplicateFiles.add(file2)
                         file2.delete()
                     }
                 }
             }
             // Remove all files from 'loadedFiles' that were deleted (because they were duplicates)
-            loadedFiles.removeAll(deletedFiles)
+            loadedFiles.removeAll(duplicateFiles)
+            foundAnyDuplicates = duplicateFiles.size > 0
         }
         // Map remaining (non-duplicate) files to their names
         val loadedPlanNames = loadedFiles?.map { file -> file.nameWithoutExtension }
 
-        return loadedPlanNames ?: listOf()
+        _planNames.postValue(loadedPlanNames ?: listOf())
+        return foundAnyDuplicates
     }
 
     private fun plansDirectory(): File {
@@ -122,8 +142,6 @@ class FileService @Inject constructor(@ApplicationContext private val context: C
         if (!plansDirectory.exists()) {
             plansDirectory.mkdirs()
         }
-
-        Timber.i(plansDirectory.listFiles()?.joinToString { file -> file.nameWithoutExtension })
 
         return plansDirectory
     }

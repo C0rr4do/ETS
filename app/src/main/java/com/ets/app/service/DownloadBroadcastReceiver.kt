@@ -19,7 +19,6 @@ class DownloadBroadcastReceiver : BroadcastReceiver() {
         val downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
         if (downloadId >= 0 && downloadId == syncService.runningRequestId) {
             // Substitution plan download is finished
-            // do stuff ...
             GlobalScope.launch {
                 syncService.onDownloadFinished()
             }

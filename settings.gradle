@@ -9,3 +9,4 @@ dependencyResolutionManagement {
 rootProject.name = "ETSApp"
 include ':app'
 include ':expansionlayout'
+include ':timelistpreference'

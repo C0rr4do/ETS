@@ -53,7 +53,7 @@ class SubstitutionViewHolder private constructor(private val binding: ItemSubsti
 
 class SubstitutionItemCallback : DiffUtil.ItemCallback<SubstitutionItem>() {
     override fun areItemsTheSame(oldItem: SubstitutionItem, newItem: SubstitutionItem): Boolean {
-        return oldItem === newItem
+        return oldItem.substitutionId == newItem.substitutionId
     }
 
     override fun areContentsTheSame(oldItem: SubstitutionItem, newItem: SubstitutionItem): Boolean {

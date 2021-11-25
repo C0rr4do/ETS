@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import androidx.preference.SwitchPreferenceCompat
 import com.ets.app.R
 
 class PreferencesFragment : PreferenceFragmentCompat(),
@@ -20,10 +19,10 @@ class PreferencesFragment : PreferenceFragmentCompat(),
 
     override fun onResume() {
         super.onResume()
-        (activity as AppCompatActivity).supportActionBar?.title = resources.getString(R.string.preferences)
+        (activity as AppCompatActivity).supportActionBar?.title =
+            resources.getString(R.string.preferences)
         PreferenceManager.getDefaultSharedPreferences(requireContext())
             .registerOnSharedPreferenceChangeListener(this)
-        updateAllowRoaming()
     }
 
     override fun onPause() {
@@ -39,9 +38,6 @@ class PreferencesFragment : PreferenceFragmentCompat(),
                 val theme = sharedPreferences.getString(key, defaultTheme)!!.toInt()
                 AppCompatDelegate.setDefaultNightMode(theme)
             }
-            resources.getString(R.string.pref_key_allow_cellular_downloads) -> {
-                updateAllowRoaming()
-            }
         }
     }
 
@@ -49,14 +45,5 @@ class PreferencesFragment : PreferenceFragmentCompat(),
         menu.findItem(R.id.option_refresh).isVisible = false
         menu.findItem(R.id.option_switch_to_latest).isVisible = false
         return super.onPrepareOptionsMenu(menu)
-    }
-
-    private fun updateAllowRoaming() {
-        // Enabled or disable the allow-roaming-preference depending on the allow-cellular-downloads preference
-        findPreference<SwitchPreferenceCompat>(resources.getString(R.string.pref_key_allow_roaming))!!.isEnabled =
-            PreferenceManager.getDefaultSharedPreferences(requireContext()).getBoolean(
-                resources.getString(R.string.pref_key_allow_cellular_downloads),
-                resources.getBoolean(R.bool.default_allow_cellular_downloads)
-            )
     }
 }

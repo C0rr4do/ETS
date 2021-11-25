@@ -1,9 +1,11 @@
 package com.ets.app.ui.fragment.previousplans
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
@@ -14,15 +16,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ets.app.BuildConfig
 import com.ets.app.R
 import com.ets.app.databinding.ItemPlanInfoBinding
-import com.github.c0rr4do.expansionlayout.ExpansionLayout
+import com.ets.app.service.SafeToast.toastSafely
 import java.io.File
 
 
-class PlanInfoAdapter :
+class PlanInfoAdapter(private val previousPlansViewModel: PreviousPlansViewModel) :
     ListAdapter<PlanInfoItem, PlanInfoViewHolder>(PlanInfoDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanInfoViewHolder {
-        return PlanInfoViewHolder.from(parent)
+        return PlanInfoViewHolder.from(parent, previousPlansViewModel)
     }
 
     override fun onBindViewHolder(holder: PlanInfoViewHolder, position: Int) {
@@ -31,7 +33,10 @@ class PlanInfoAdapter :
     }
 }
 
-class PlanInfoViewHolder private constructor(private val binding: ItemPlanInfoBinding) :
+class PlanInfoViewHolder private constructor(
+    private val binding: ItemPlanInfoBinding,
+    private val previousPlansViewModel: PreviousPlansViewModel
+) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(planInfoItem: PlanInfoItem) {
@@ -46,20 +51,18 @@ class PlanInfoViewHolder private constructor(private val binding: ItemPlanInfoBi
     }
 
     private fun openPlan() {
-        val planName = binding.planInfoItem?.planName
-        planName?.let {
+        binding.planInfoItem?.planName?.let { planName ->
             val action =
-                PreviousPlansFragmentDirections.actionPreviousPlansFragmentToSubstitutionPlanFragment(
-                    it
-                )
+                PreviousPlansFragmentDirections
+                    .actionPreviousPlansFragmentToSubstitutionPlanFragment(planName)
             binding.root.findNavController().navigate(action)
         }
     }
 
     private fun openOriginalFile() {
-        binding.planInfoItem?.originalFilePath?.let {
+        binding.planInfoItem?.originalFilePath?.let { originalFilePath ->
             with(binding.root) {
-                val file = File(it)
+                val file = File(originalFilePath)
 
                 // Get URI and MIME type of file
                 val uri: Uri = FileProvider.getUriForFile(
@@ -73,14 +76,42 @@ class PlanInfoViewHolder private constructor(private val binding: ItemPlanInfoBi
                 intent.action = Intent.ACTION_VIEW
                 intent.setDataAndType(uri, "application/pdf")
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                startActivity(context, intent, null)
+                try {
+                    startActivity(context, intent, null)
+                } catch (_: ActivityNotFoundException) {
+                    toastSafely(
+                        context,
+                        "Could not find default application for opening PDF-files on device"
+                    )
+                }
             }
         }
     }
 
+    private fun requestDeleteFile() {
+        AlertDialog.Builder(binding.root.context)
+            .setTitle(binding.root.context.resources.getString(R.string.confirm_removing))
+            .setMessage(
+                binding.root.context.resources.getString(
+                    R.string.do_you_want_to_delete_plan_for,
+                    binding.planInfoItem!!.planDate
+                )
+            )
+            .setIcon(R.drawable.delete)
+            .setPositiveButton(binding.root.context.resources.getString(R.string.delete)) { dialog, _ ->
+                previousPlansViewModel.deletePlanFile(binding.planInfoItem!!.planName)
+                dialog.dismiss()
+            }
+            .setNegativeButton(binding.root.context.resources.getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
+
     companion object {
         fun from(
-            parent: ViewGroup
+            parent: ViewGroup, previousPlansViewModel: PreviousPlansViewModel
         ): PlanInfoViewHolder {
             // Inflate layout 'item_plan_info'
             val layoutInflater = LayoutInflater.from(parent.context)
@@ -88,11 +119,12 @@ class PlanInfoViewHolder private constructor(private val binding: ItemPlanInfoBi
                 DataBindingUtil.inflate(layoutInflater, R.layout.item_plan_info, parent, false)
 
             // Create view holder
-            val viewHolder = PlanInfoViewHolder(binding)
+            val viewHolder = PlanInfoViewHolder(binding, previousPlansViewModel)
 
             // Handle open plan button
-            binding.imageViewOpen.setOnClickListener { viewHolder.openPlan() }
-            binding.imageViewOpenOriginal.setOnClickListener { viewHolder.openOriginalFile() }
+            binding.imageButtonOpen.setOnClickListener { viewHolder.openPlan() }
+            binding.imageButtonOpenOriginal.setOnClickListener { viewHolder.openOriginalFile() }
+            binding.imageButtonDeletePlanInfo.setOnClickListener { viewHolder.requestDeleteFile() }
 
             // These statement starts the marquee animation
             binding.textViewOriginalFile.isSelected = true
@@ -100,7 +132,6 @@ class PlanInfoViewHolder private constructor(private val binding: ItemPlanInfoBi
             return viewHolder
         }
     }
-
 }
 
 class PlanInfoDiffCallback : DiffUtil.ItemCallback<PlanInfoItem>() {
