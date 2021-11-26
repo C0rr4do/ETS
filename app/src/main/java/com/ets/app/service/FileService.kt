@@ -51,9 +51,9 @@ class FileService @Inject constructor(
                     val planName = _planNames.value!!.firstOrNull()
                     planName?.let {
                         if (anyDuplicates) {
-                            notificationService.notifyNewPlanAvailable(it)
-                        } else {
                             notificationService.notifyYourPlanIsUpToDate(it)
+                        } else {
+                            notificationService.notifyNewPlanAvailable(it)
                         }
                     }
                 }
