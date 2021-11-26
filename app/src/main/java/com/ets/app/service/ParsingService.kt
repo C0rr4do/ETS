@@ -406,23 +406,21 @@ class ParsingService @Inject constructor(
         return subject
     }
 
-<<<<<<< HEAD
-    private fun getPassword(): String {
-        // TODO Do not hardcode this
-        return "pennenspatz"
-=======
     private fun decryptFile(file: File?): PDDocument? {
         return try {
             PDDocument.load(file, planPassword)
         } catch (_: InvalidPasswordException) {
-            toastSafely(context, context.resources.getString(R.string.invalid_password_check_settings))
+            toastSafely(
+                context,
+                context.resources.getString(R.string.invalid_password_check_settings)
+            )
             null
         } catch (_: IOException) {
             toastSafely(context, context.resources.getString(R.string.error_while_decrypting_file))
             null
         }
->>>>>>> refs/remotes/origin/master
     }
+
 
     //region data classes
 
