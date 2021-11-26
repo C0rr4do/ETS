@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ets.app.R
 import com.ets.app.databinding.FragmentSubstitutionPlanBinding
-import com.ets.app.service.Timestamps
+import com.ets.app.util.Timestamps
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

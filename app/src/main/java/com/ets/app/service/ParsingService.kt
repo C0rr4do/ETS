@@ -9,7 +9,8 @@ import com.ets.app.model.Course
 import com.ets.app.model.Subject
 import com.ets.app.model.Substitution
 import com.ets.app.model.SubstitutionPlan
-import com.ets.app.service.SafeToast.toastSafely
+import com.ets.app.util.SafeToast.toastSafely
+import com.ets.app.util.Timestamps
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.pdmodel.encryption.InvalidPasswordException
 import com.tom_roush.pdfbox.text.PDFTextStripper
@@ -46,7 +47,7 @@ class ParsingService @Inject constructor(
     // regular expressions
     private val courseRegex = Regex("""\d{3}[a-z](,)?|[QE]\d/\d\s+\w+\d+""")
     private val lessonRegex = Regex("""\s\d\s(-\s\d)?""")
-    private val roomRegex = Regex("""[A-Z0-9]+\s""")
+    private val roomRegex = Regex("""[A-Za-z0-9]+\s""")
     private val subjectRegex = Regex("""[A-Z\u00C4\u00D6\u00DC]+\s""")
     private val typeRegex =
         Regex("""Raumänderung|Vertretung|frei|Trotz Absenz|Fachbetreuung|Sondereins\.|Verlegung|Unterricht geändert""")
@@ -221,6 +222,8 @@ class ParsingService @Inject constructor(
                                 subSubject.result = subject.result
                             } else if (type.result == "frei") {
                                 subSubject.result = Subject.CANCELED
+                            }else {
+                                subSubject.result = subject.result
                             }
                         }
 

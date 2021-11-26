@@ -10,7 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 import com.ets.app.R
-import com.ets.app.service.SafeToast.toastSafely
+import com.ets.app.util.SafeToast.toastSafely
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import com.ets.app.service.FileService
 import com.ets.app.service.ParsingService
 import com.ets.app.service.SyncService
-import com.ets.app.service.Timestamps
+import com.ets.app.util.Timestamps
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

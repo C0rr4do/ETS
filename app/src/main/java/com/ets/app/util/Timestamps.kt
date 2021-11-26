@@ -1,4 +1,4 @@
-package com.ets.app.service
+package com.ets.app.util
 
 import org.joda.time.format.DateTimeFormat
 

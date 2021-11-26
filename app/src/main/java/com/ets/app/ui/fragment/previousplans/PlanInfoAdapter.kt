@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ets.app.BuildConfig
 import com.ets.app.R
 import com.ets.app.databinding.ItemPlanInfoBinding
-import com.ets.app.service.SafeToast.toastSafely
+import com.ets.app.util.SafeToast.toastSafely
 import java.io.File
 
 
