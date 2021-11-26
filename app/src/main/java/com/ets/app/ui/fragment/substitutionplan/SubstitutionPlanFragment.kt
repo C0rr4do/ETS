@@ -94,6 +94,7 @@ class SubstitutionPlanFragment : Fragment() {
         // Plan name
         val planName = args.substitutionPlanName
         if (planName == null) {
+            viewModel.downloadLatest()
             viewModel.setUseLatest(true)
         } else {
             viewModel.selectPlanName(planName)

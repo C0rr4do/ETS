@@ -384,7 +384,7 @@ class ParsingService @Inject constructor(
         }
         return subject
     }
-    
+
     private fun getPassword(): String {
         // TODO Do not hardcode this
         return "pennenspatz"
