@@ -15,8 +15,6 @@
     <string name="background_sync">Hintergrundsynchronisierung</string>
     <string name="allow_cellular_downloads">Downloads über Mobilfunk</string>
     <string name="sync_rate">Synchronisierungsrate</string>
-    <string name="never">Niemals</string>
-    <string name="before_lessons">(15min) Vor Unterricht</string>
     <string name="subject_canceled">Fällt aus</string>
     <string name="subject_tutorial">Tutorium</string>
     <string name="subject_mathematics">Mathematik</string>
@@ -40,18 +38,25 @@
     <string name="subject_geography">Erdkunde</string>
     <string name="subject_sports">Sport</string>
     <string name="subject_remediation">Förderunterricht</string>
-    <string name="current_plan">Aktueller Plan</string>
-    <string name="switch_to_latest">Zu letztem Plan wechseln</string>
+    <string name="latest_plan">Aktueller Plan</string>
+    <string name="switch_to_latest">Zu aktuellster Plan wechseln</string>
     <string name="allow_roaming">Roaming erlauben</string>
     <string name="download_date">Download Datum</string>
     <string name="download_time">Download Zeit</string>
     <string name="file_path">Dateipfad</string>
-
-    <!-- Sync Preferences -->
-    <string name="pref_key_theme">pref_theme</string>
-    <string name="pref_key_sync_rate">pref_sync_rate</string>
-    <string name="pref_key_allow_cellular_downloads">pref_download_using_cellular</string>
-    <string name="pref_key_sync_rate_before_lessons">pref_sync_rate_before_lessons</string>
-    <string name="pref_key_running_request_id">pref_key_pending_request_id</string>
-    <string name="pref_key_allow_roaming">pref_allow_roaming</string>
+    <string name="sync_rate_preferences">Synchronisationseinstellungen</string>
+    <string name="subject_unknown">Unbekannt</string>
+    <string name="security">Sicherheit</string>
+    <string name="enable_background_sync">Hintergrundsynchronisation aktivieren</string>
+    <string name="sync_times">Synchronisationszeiten</string>
+    <string name="new_plan_available">Neuer Plan verfügbar</string>
+    <string name="background_sync_running">Hintergrundsynchronisation läuft</string>
+    <string name="your_plan_is_up_to_date">Vertretungsplan ist aktuell</string>
+    <string name="invalid_password_check_settings">Password ungültig\nBitte Einstellungen überprüfen</string>
+    <string name="error_while_decrypting_file">Fehler beim Entschlüsseln der Datei</string>
+    <string name="starting_download_when_wifi_is_available">Download startet, sobald mit WLAN verbunden</string>
+    <string name="starting_download_when_network_is_not_roaming_anymore">Download startet, sobald Netzwerk nicht mehr über Roaming</string>
+    <string name="delete">Löschen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="do_you_want_to_delete_plan_for">Möchtest du den Plan vom %s löschen?</string>
 </resources>

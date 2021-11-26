@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.ets.app.ETSApplication
 import com.ets.app.R
 import com.ets.app.databinding.ActivityMainBinding
 import com.ets.app.ui.fragment.preferences.SyncRatePreferencesFragment
@@ -27,7 +26,7 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -58,15 +57,5 @@ class MainActivity : AppCompatActivity(),
             }
         }
         return true
-    }
-
-    override fun onResume() {
-        super.onResume()
-        (application as ETSApplication).appIsRunning = true
-    }
-
-    override fun onPause() {
-        super.onPause()
-        (application as ETSApplication).appIsRunning = false
     }
 }

@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/expansionlayout" />
+            <option value="$PROJECT_DIR$/timelistpreference" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

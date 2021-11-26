@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_time">Uhrzeit hinzufügen</string>
+    <string name="no_times_selected">Keine Uhrzeiten gewählt</string>
+    <string name="confirm_removing">Entfernen bestätigen</string>
+    <string name="do_you_want_to_remove">Möchtest du %s wirklich entfernen?</string>
+    <string name="remove">Entfernen</string>
+    <string name="cancel">Abbrechen</string>
+</resources>

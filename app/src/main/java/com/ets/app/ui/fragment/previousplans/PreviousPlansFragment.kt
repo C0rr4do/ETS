@@ -31,7 +31,7 @@ class PreviousPlansFragment : Fragment() {
         // Setup recyclerview
         binding.recyclerViewPlanInfos.let { recyclerView ->
             // Create adapter and store it to class-attribute 'adapter'
-            adapter = PlanInfoAdapter()
+            adapter = PlanInfoAdapter(viewModel)
 
             // Set adapter of recyclerView
             recyclerView.adapter = adapter

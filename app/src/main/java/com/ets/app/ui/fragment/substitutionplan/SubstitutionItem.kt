@@ -4,6 +4,7 @@ import com.ets.app.model.Course
 import com.ets.app.model.Substitution
 
 class SubstitutionItem(
+    val substitutionId: Int,
     val courses: String,
     val lessons: String,
     val subjectResourceId: Int,
@@ -49,6 +50,7 @@ class SubstitutionItem(
     companion object {
         fun from(substitution: Substitution): SubstitutionItem {
             return SubstitutionItem(
+                substitutionId = substitution.id,
                 courses = formatCourses(substitution.courses),
                 lessons = formatLessons(substitution.lessons),
                 subjectResourceId = substitution.subject.resourceID,
@@ -65,10 +67,10 @@ class SubstitutionItem(
         }
 
         private fun formatLessons(lessons: IntRange): String {
-            return if (lessons.start == lessons.endInclusive) {
-                "${lessons.start}"
+            return if (lessons.first == lessons.last) {
+                "${lessons.first}"
             } else {
-                "${lessons.start} - ${lessons.endInclusive}"
+                "${lessons.first} - ${lessons.last}"
             }
         }
     }

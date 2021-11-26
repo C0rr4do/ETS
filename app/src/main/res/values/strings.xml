@@ -4,6 +4,7 @@
     <string name="substitution_plan">Substitution plan</string>
     <string name="previous_plans">Previous plans</string>
     <string name="preferences">Preferences</string>
+    <string name="sync_rate_preferences">Sync rate preferences</string>
     <string name="refresh">Refresh</string>
     <string name="course">Course</string>
     <string name="lessons">Lessons</string>
@@ -14,8 +15,6 @@
     <string name="background_sync">Background sync</string>
     <string name="allow_cellular_downloads">Allow cellular downloads</string>
     <string name="sync_rate">Sync rate</string>
-    <string name="never">Never</string>
-    <string name="before_lessons">Before lessons (15min)</string>
     <string name="subject_canceled">Canceled</string>
     <string name="subject_tutorial">Tutorial</string>
     <string name="subject_mathematics">Mathematics</string>
@@ -40,18 +39,38 @@
     <string name="subject_sports">Sports</string>
     <string name="subject_remediation">Remediation</string>
     <string name="subject_unknown">Unknown</string>
-    <string name="current_plan">Current plan</string>
+    <string name="latest_plan">Latest plan</string>
     <string name="switch_to_latest">Switch to latest</string>
     <string name="allow_roaming">Allow roaming</string>
     <string name="download_date">Download date</string>
     <string name="download_time">Download time</string>
     <string name="file_path">File path</string>
+    <string name="security">Security</string>
+    <string name="enable_background_sync">Enable background sync</string>
+    <string name="sync_times">Sync times</string>
+    <string name="new_plan_available">New plan available</string>
+    <string name="background_sync_running">Background sync running</string>
+    <string name="your_plan_is_up_to_date">Your plan is up to date</string>
+    <string name="invalid_password_check_settings">Invalid password\nPlease check settings</string>
+    <string name="error_while_decrypting_file">Error while decrypting file</string>
+    <string name="starting_download_when_wifi_is_available">Starting download when wifi is available</string>
+    <string name="starting_download_when_network_is_not_roaming_anymore">Starting download when network is not roaming anymore</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="do_you_want_to_delete_plan_for">Do you want to delete plan for %s?</string>
+
+    <!--  Notification channel -->
+    <string name="notification_channel_name" translatable="false">etsapp_nch</string>
+    <string name="notification_channel_description" translatable="false">Substitution plan updates and alerts</string>
 
     <!-- Sync Preferences -->
-    <string name="pref_key_theme">pref_theme</string>
-    <string name="pref_key_sync_rate">pref_sync_rate</string>
-    <string name="pref_key_allow_cellular_downloads">pref_download_using_cellular</string>
-    <string name="pref_key_sync_rate_before_lessons">pref_sync_rate_before_lessons</string>
-    <string name="pref_key_running_request_id">pref_key_pending_request_id</string>
-    <string name="pref_key_allow_roaming">pref_allow_roaming</string>
+    <string name="pref_key_theme" translatable="false">pref_theme</string>
+    <string name="pref_key_sync_rate" translatable="false">pref_sync_rate</string>
+    <string name="pref_key_allow_cellular_downloads" translatable="false">pref_download_using_cellular</string>
+    <string name="pref_key_enable_background_sync" translatable="false">pref_enable_background_sync</string>
+    <string name="pref_key_running_request_id" translatable="false">pref_key_pending_request_id</string>
+    <string name="pref_key_allow_roaming" translatable="false">pref_allow_roaming</string>
+    <string name="pref_key_plan_password" translatable="false">pref_plan_password</string>
+    <string name="pref_key_background_sync_times" translatable="false">pref_background_sync_times</string>
+    <string name="pref_key_running_background_sync_times" translatable="false">pref_running_background_sync_times</string>
 </resources>

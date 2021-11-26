@@ -60,6 +60,11 @@ class SubstitutionPlanFragment : Fragment() {
         viewModel.useLatest.observe(viewLifecycleOwner) { useLatest ->
             // Update options-menu item
             updateOptionsMenu()
+            if (useLatest) {
+                viewModel.latestPlanName.observe(viewLifecycleOwner, selectLatestPlanNameObserver)
+            } else {
+                viewModel.latestPlanName.removeObserver(selectLatestPlanNameObserver)
+            }
         }
 
         // Listen for planName changes
@@ -78,8 +83,8 @@ class SubstitutionPlanFragment : Fragment() {
             }
         }
 
-        viewModel.substitutionItems.observe(viewLifecycleOwner) { substitutions ->
-            adapter.submitList(substitutions ?: listOf())
+        viewModel.substitutionItems.observe(viewLifecycleOwner) { substitutionItems ->
+            adapter.submitList(substitutionItems ?: listOf())
         }
 
         setHasOptionsMenu(true)

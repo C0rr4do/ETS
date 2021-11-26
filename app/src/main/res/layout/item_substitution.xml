@@ -86,7 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/default_padding"
+            android:paddingHorizontal="@dimen/half_default_padding"
             android:paddingBottom="@dimen/default_padding">
 
             <androidx.appcompat.widget.LinearLayoutCompat

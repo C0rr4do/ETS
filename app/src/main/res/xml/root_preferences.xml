@@ -1,7 +1,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    app:title="@string/preferences">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <PreferenceCategory app:title="@string/security">
+        <EditTextPreference
+            android:dependency=""
+            android:inputType="textPassword"
+            android:key="@string/pref_key_plan_password"
+            android:title="Plan password"
+            app:defaultValue=""
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/appearance">
 
@@ -27,9 +36,11 @@
             app:title="@string/allow_cellular_downloads" />
 
         <SwitchPreferenceCompat
+            android:dependency="@string/pref_key_allow_cellular_downloads"
             app:defaultValue="@bool/default_allow_roaming"
             app:key="@string/pref_key_allow_roaming"
             app:title="@string/allow_roaming"
             tools:enabled="false" />
     </PreferenceCategory>
+
 </PreferenceScreen>

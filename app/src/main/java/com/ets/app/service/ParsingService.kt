@@ -1,27 +1,28 @@
 package com.ets.app.service
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.preference.PreferenceManager
+import com.ets.app.R
 import com.ets.app.model.Course
 import com.ets.app.model.Subject
 import com.ets.app.model.Substitution
 import com.ets.app.model.SubstitutionPlan
+import com.ets.app.service.SafeToast.toastSafely
 import com.tom_roush.pdfbox.pdmodel.PDDocument
+import com.tom_roush.pdfbox.pdmodel.encryption.InvalidPasswordException
 import com.tom_roush.pdfbox.text.PDFTextStripper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormatter
 import timber.log.Timber
 import java.io.File
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 
 @Singleton
 class ParsingService @Inject constructor(
@@ -34,9 +35,17 @@ class ParsingService @Inject constructor(
     private val _runningJobIds = MutableLiveData(mutableListOf<Int>())
     val parsing = Transformations.map(_runningJobIds) { it.size > 0 }
 
+    private val planPassword: String
+        get() {
+            return PreferenceManager.getDefaultSharedPreferences(context).run {
+                getString(context.resources.getString(R.string.pref_key_plan_password), "")!!
+            }
+        }
+
+
     // regular expressions
-    private val courseRegex = Regex("""\d{3}[a-z](\,)?|[QE]\d\/\d\s+\w+\d+""")
-    private val lessonRegex = Regex("""\s\d\s(\-\s\d)?""")
+    private val courseRegex = Regex("""\d{3}[a-z](,)?|[QE]\d/\d\s+\w+\d+""")
+    private val lessonRegex = Regex("""\s\d\s(-\s\d)?""")
     private val roomRegex = Regex("""[A-Z0-9]+\s""")
     private val subjectRegex = Regex("""[A-Z\u00C4\u00D6\u00DC]+\s""")
     private val typeRegex =
@@ -46,7 +55,7 @@ class ParsingService @Inject constructor(
     @Volatile
     private var parsingJobCount = 0
 
-    suspend fun getParsedDate(planName: String): Long? {
+    suspend fun getParsedDate(planName: String): Long {
         // If date of this substitution-plan was parsed and cached already
         if (parsedDates.containsKey(planName)) {
             // Return cached date instead of re-parsing it
@@ -93,7 +102,7 @@ class ParsingService @Inject constructor(
                 val file = fileService.getFileByName(planName)
 
                 // Parse substitution-plan of file
-                var parsedPlan = parsePlan(planName, file)
+                val parsedPlan = parsePlan(file)
 
                 // If substitution-plan was parsed successfully, store result in cache
                 parsedPlan?.let {
@@ -119,35 +128,36 @@ class ParsingService @Inject constructor(
         if (file == null) return Timestamps.UNKNOWN_TIMESTAMP
         else {
             // load pdf document from file and extract text
-            val doc = PDDocument.load(file, getPassword())
+            decryptFile(file)?.let { doc ->
+                val stripper = PDFTextStripper()
+                stripper.startPage = 1
+                stripper.endPage = 1
 
-            val stripper = PDFTextStripper()
-            stripper.startPage = 1
-            stripper.endPage = 1
+                val lines = stripper.getText(doc).split('\n')
+                doc.close()
+                var index = 0
 
-            val lines = stripper.getText(doc).split('\n')
-            doc.close()
-            var index = 0
+                // iterate through lines
+                while (index < lines.size) {
+                    // find line which matches the pattern
+                    if (dateRegex.matches(lines[index])) {
+                        // parse date
+                        return parseDateLine(lines[index], file.nameWithoutExtension.toLong())
+                    }
 
-            // iterate through lines
-            while (index < lines.size) {
-                // find line which matches the pattern
-                if (dateRegex.matches(lines[index])) {
-                    // parse date
-                    return parseDate(lines[index])
+                    // goto next line
+                    index++
                 }
-
-                // goto next line
-                index++
             }
 
             // return unknown timestamp if no line was found
+            // or 'planPassword' was incorrect
             return Timestamps.UNKNOWN_TIMESTAMP
         }
     }
 
     // parses the date in the specified line
-    private fun parseDate(line: String): Long {
+    private fun parseDateLine(line: String, downloadTimestamp: Long): Long {
         // check if line matches
         val match = dateRegex.find(line)
 
@@ -155,23 +165,23 @@ class ParsingService @Inject constructor(
             // extract day and month
             val day = match.groupValues[1].toInt()
             val month = match.groupValues[2].toInt()
-            // get the current year
-            val year = DateTime.now().year
+            // get most probable year according to download date of plan
+            val date = getMostProbableDate(downloadTimestamp, day, month)
 
             // return milliseconds of the parsed time
-            DateTime(year, month, day, 0, 0, 0).millis
+            date.millis
         } else Timestamps.UNKNOWN_TIMESTAMP
     }
 
     // parses a substitution plan from the specified file
-    private fun parsePlan(planName: String, file: File?): SubstitutionPlan? {
-        // return null if no file was given
-        return if (file == null) {
+    private fun parsePlan(file: File?): SubstitutionPlan? {
+        // Try to decrypt pdf-file
+        val doc = decryptFile(file)
+        // return null if no file was given or file could not be decrypted
+        return if (file == null || doc == null) {
             null
         } else {
-            // load pdf document and extract all text
-            val doc = PDDocument.load(file, getPassword())
-
+            // Extract all text from pdf
             val stripper = PDFTextStripper()
             stripper.startPage = 1
             stripper.endPage = doc.numberOfPages
@@ -192,18 +202,18 @@ class ParsingService @Inject constructor(
                 // try to parse courses from the line
                 val courses = parseCourse(lines, index)
                 // select the current line
-                var line = lines[index]
+                val line = lines[index]
                 try {
                     // courses where found on this line
                     if (courses.result != null) {
                         // extract lessons, subjects, rooms and additional substitution information
-                        var lessons = parseLessons(line)
-                        var subject = parseSubject(line, lessons.endIndex)
-                        var room = parseRoom(line, subject.endIndex)
-                        var subSubject = parseSubject(line, room.endIndex)
-                        var subRoom = parseRoom(line, subSubject.endIndex)
-                        var type = parseType(line, subRoom.endIndex)
-                        var info = line.substring(type.endIndex).trim()
+                        val lessons = parseLessons(line)
+                        val subject = parseSubject(line, lessons.endIndex)
+                        val room = parseRoom(line, subject.endIndex)
+                        val subSubject = parseSubject(line, room.endIndex)
+                        val subRoom = parseRoom(line, subSubject.endIndex)
+                        val type = parseType(line, subRoom.endIndex)
+                        val info = line.substring(type.endIndex).trim()
 
                         // set the right substitution subject if no substitution subject was parsed
                         if (subSubject.result == Subject.UNKNOWN) {
@@ -233,19 +243,11 @@ class ParsingService @Inject constructor(
                         index += courses.lines
                     } else if (dateRegex.containsMatchIn(line)) {
                         // parse substitution plan date if was found on line
-                        date = parseDate(line)
+                        date = parseDateLine(line, file.nameWithoutExtension.toLong())
                     }
                 } catch (e: Exception) {
                     // display exceptions on ui
-                    with(Handler(Looper.getMainLooper())) {
-                        post {
-                            Toast.makeText(
-                                context,
-                                "Error while parsing substitution-plan",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
+                    toastSafely(context, "Error while parsing substitution-plan")
                 }
 
                 // increase the line index by 1
@@ -253,7 +255,7 @@ class ParsingService @Inject constructor(
             }
 
             // return substitution plan
-            SubstitutionPlan(planName.toLong(), date, "", arrayOf(), substitutions)
+            SubstitutionPlan(date, "", arrayOf(), substitutions)
         }
     }
 
@@ -261,14 +263,14 @@ class ParsingService @Inject constructor(
     private fun parseCourse(lines: List<String>, index: Int): CourseParserData {
         // create variables
         var courseString = ""
-        var curr = index;
+        var curr = index
 
         do {
             // search for courses on current line
-            var line = lines[curr]
-            var match = courseRegex.findAll(line)
+            val line = lines[curr]
+            val match = courseRegex.findAll(line)
 
-            var lastMatch = true;
+            var lastMatch = true
             // iterate through found matches and store them
             match.forEach {
                 courseString += it.value
@@ -287,18 +289,18 @@ class ParsingService @Inject constructor(
         // if courses were found
         if (courseString.isNotEmpty()) {
             // split course string
-            var courseStringParts = courseString.split(',').map { it.trim() }
+            val courseStringParts = courseString.split(',').map { it.trim() }
 
             // parse course strings
-            var courses = courseStringParts.map {
+            val courses = courseStringParts.map {
                 if (it.startsWith("Q") || it.startsWith("E")) {
                     val parts = it.split(' ')
 
                     Course(
                         when (parts[0]) {
-                            "E1/2" -> 11;
-                            "Q1/2" -> 12;
-                            "Q3/4" -> 13;
+                            "E1/2" -> 11
+                            "Q1/2" -> 12
+                            "Q3/4" -> 13
                             else -> -1
                         }, parts[1]
                     )
@@ -373,6 +375,25 @@ class ParsingService @Inject constructor(
         else ParserData("", index)
     }
 
+    // find closest date
+    private fun getMostProbableDate(toTimestamp: Long, day: Int, month: Int): DateTime {
+        val timestampYear = DateTime(toTimestamp).year
+
+        // Calculate millis of timestamp when using year of download
+        val usingTimestampYear = DateTime(timestampYear, month, day, 0, 0)
+
+        // Calculate millis of timestamp when using previous year to download year
+        val usingPreviousYear = DateTime(timestampYear - 1, month, day, 0, 0)
+
+        val usingTimestampYearDifference = abs(usingTimestampYear.millis - toTimestamp)
+        val usingPreviousYearDifference = abs(usingPreviousYear.millis - toTimestamp)
+        return if (usingTimestampYearDifference < usingPreviousYearDifference) {
+            usingTimestampYear
+        } else {
+            usingPreviousYear
+        }
+    }
+
     // get subject
     private fun getSubject(id: String): Subject {
         // find subject in class
@@ -385,10 +406,25 @@ class ParsingService @Inject constructor(
         return subject
     }
 
+<<<<<<< HEAD
     private fun getPassword(): String {
         // TODO Do not hardcode this
         return "pennenspatz"
+=======
+    private fun decryptFile(file: File?): PDDocument? {
+        return try {
+            PDDocument.load(file, planPassword)
+        } catch (_: InvalidPasswordException) {
+            toastSafely(context, context.resources.getString(R.string.invalid_password_check_settings))
+            null
+        } catch (_: IOException) {
+            toastSafely(context, context.resources.getString(R.string.error_while_decrypting_file))
+            null
+        }
+>>>>>>> refs/remotes/origin/master
     }
+
+    //region data classes
 
     data class CourseParserData(val result: List<Course>?, val lines: Int)
 
@@ -397,4 +433,7 @@ class ParsingService @Inject constructor(
     data class SubjectParserData(var result: Subject, val endIndex: Int)
 
     data class ParserData(var result: String, val endIndex: Int)
+
+    //endregion data classes
+
 }

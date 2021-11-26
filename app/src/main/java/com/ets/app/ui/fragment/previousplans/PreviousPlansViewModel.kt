@@ -48,6 +48,15 @@ class PreviousPlansViewModel @Inject constructor(
                 newPlanInfoItems.add(generatePlanInfoItem(planName))
                 _planInfoItems.postValue(newPlanInfoItems)
             }
+            if (newPlanInfoItems.isEmpty()) {
+                _planInfoItems.postValue(newPlanInfoItems)
+            }
+        }
+    }
+
+    fun deletePlanFile(planName: String) {
+        viewModelScope.launch {
+            fileService.deletePlanFile(planName)
         }
     }
 
@@ -55,7 +64,7 @@ class PreviousPlansViewModel @Inject constructor(
         val originalFilePath =
             fileService.getFileByName(planName)?.absolutePath
 
-        val planDate = parsingService.getParsedDate(planName)?.let { Timestamps.formatDate(it) }
+        val planDate = Timestamps.formatDate(parsingService.getParsedDate(planName))
 
         val downloadDate = Timestamps.formatDate(planName.toLong())
 

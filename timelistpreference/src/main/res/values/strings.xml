@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_time">Add time</string>
+    <string name="no_times_selected">No times selected</string>
+    <string name="confirm_removing">Confirm removing</string>
+    <string name="do_you_want_to_remove">Do you want to remove %s?</string>
+    <string name="remove">Remove</string>
+    <string name="cancel">Cancel</string>
+</resources>
