@@ -51,7 +51,7 @@ class ParsingService @Inject constructor(
     private val subjectRegex = Regex("""[A-Z\u00C4\u00D6\u00DC]+\s""")
     private val typeRegex =
         Regex("""Raumänderung|Vertretung|frei|Trotz Absenz|Fachbetreuung|Sondereins\.|Verlegung|Unterricht geändert""")
-    private val dateRegex = Regex("""Vertretungen\s+(\d{2})\.(\d{2})\..+""")
+    private val dateRegex = Regex("""Vertretungen\s+(\d{1,2})\.(\d{1,2})\..+""")
 
     @Volatile
     private var parsingJobCount = 0
