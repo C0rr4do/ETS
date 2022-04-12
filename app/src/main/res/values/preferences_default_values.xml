@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="default_theme" translatable="false">-1</string>
-    <bool name="default_enable_background_sync">false</bool>
-    <bool name="default_allow_cellular_downloads">false</bool>
-    <bool name="default_allow_roaming">false</bool>
-</resources>
